@@ -12,7 +12,6 @@ import {
   Image,
   Dimensions
 } from "react-native";
-import InputWithButton from "../components/TextInput/InputWithButton";
 import DateTimePicker from "react-native-modal-datetime-picker";
 
 import Icon from "react-native-vector-icons/Ionicons";

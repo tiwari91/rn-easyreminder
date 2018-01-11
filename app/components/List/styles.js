@@ -1,34 +1,34 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   listContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 15
-    //backgroundColor: "#5D6874"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    // backgroundColor: "#5D6874"
   },
 
   listLeft: {
     marginTop: 12,
-    flexDirection: "row",
-    marginBottom: 10
+    flexDirection: 'row',
+    marginBottom: 10,
   },
 
   contentDetail: {
     marginLeft: 8,
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
   },
 
   textContent: {
-    //color: "white",
+    // color: "white",
     fontSize: 14,
-    paddingTop: 5
+    paddingTop: 5,
   },
 
   icon: {
-    alignItems: "flex-end",
-    marginTop: 12
-  }
+    alignItems: 'flex-end',
+    marginTop: 12,
+  },
 });
 
 export default styles;

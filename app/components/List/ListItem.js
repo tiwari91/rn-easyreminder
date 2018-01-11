@@ -1,8 +1,8 @@
-import React from "react";
-import { View, FlatList, Text, TouchableOpacity } from "react-native";
-import { List, Avatar } from "react-native-elements";
-import Icon from "react-native-vector-icons/Ionicons";
-import styles from "./styles";
+import React from 'react';
+import { View, FlatList, Text, TouchableOpacity } from 'react-native';
+import { List, Avatar } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/Ionicons';
+import styles from './styles';
 
 class ListItem extends React.Component {
   constructor(props) {
@@ -10,20 +10,20 @@ class ListItem extends React.Component {
     this.state = {
       data: [
         {
-          key: "a",
-          title: "Learn French",
-          date: "01-08-2018 01:00pm",
-          duration: "Every 5 min",
-          avatar: "avatar"
+          key: 'a',
+          title: 'Learn French',
+          date: '01-08-2018 01:00pm',
+          duration: 'Every 5 min',
+          avatar: 'avatar',
         },
         {
-          key: "b",
-          title: "Take the dog to park",
-          date: "01-09-2018 03:00pm",
-          duration: "Every 2 day",
-          avatar: "avatar"
-        }
-      ]
+          key: 'b',
+          title: 'Take the dog to park',
+          date: '01-09-2018 03:00pm',
+          duration: 'Every 2 day',
+          avatar: 'avatar',
+        },
+      ],
     };
   }
 
@@ -52,7 +52,7 @@ class ListItem extends React.Component {
           )}
           keyExtractor={item => item.key}
           ItemSeparatorComponent={() => (
-            <View style={{ height: 0.5, backgroundColor: "#E5E5E5" }} />
+            <View style={{ height: 0.5, backgroundColor: '#E5E5E5' }} />
           )}
         />
       </List>

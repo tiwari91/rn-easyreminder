@@ -1,15 +1,13 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   StatusBar,
-  View,
-  Text,
   SafeAreaView,
-  KeyboardAvoidingView
-} from "react-native";
-import ActionButton from "react-native-action-button";
+  KeyboardAvoidingView,
+} from 'react-native';
+import ActionButton from 'react-native-action-button';
 
-import { Header } from "../components/Header";
-import { ListItem } from "../components/List";
+import { Header } from '../components/Header';
+import { ListItem } from '../components/List';
 
 class Home extends Component {
   render() {
@@ -23,8 +21,8 @@ class Home extends Component {
         <ActionButton
           buttonColor="rgba(231,76,60,1)"
           onPress={() =>
-            this.props.navigation.navigate("AddReminder", {
-              title: "Create a Reminder"
+            this.props.navigation.navigate('AddReminder', {
+              title: 'Create a Reminder',
             })
           }
         />

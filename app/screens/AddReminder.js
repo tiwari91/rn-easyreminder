@@ -17,31 +17,52 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import ChevronIcon from "react-native-vector-icons/EvilIcons";
-import DeleteIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import NavIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
 class AddReminder extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
       headerRight: (
-        <TouchableOpacity onPress={() => params.handleRemove()}>
-          <DeleteIcon color="white" size={26} name="delete" />
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity onPress={() => params.handleRemove()}>
+            <NavIcon color="white" size={26} name="delete" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ marginLeft: 20 }}
+            onPress={() => params.handleSave()}
+          >
+            <NavIcon color="white" size={26} name="check" />
+          </TouchableOpacity>
+        </View>
       ),
-
       headerTintColor: "white",
       headerStyle: {
-        backgroundColor: "#374046",
-        elevation: null
+        backgroundColor: "#374046"
+      },
+      headerTitle: params.title,
+      headerTitleStyle: {
+        right: 100,
+        alignSelf: "flex-end"
+        //fontFamily: "MuseoSansRounded-300"
       }
     };
   };
   componentDidMount() {
-    this.props.navigation.setParams({ handleRemove: this.deleteReminder });
+    //console.log(this.props.navigation);
+
+    this.props.navigation.setParams({
+      handleRemove: this.deleteReminder,
+      handleSave: this.saveReminder
+    });
   }
 
   deleteReminder = () => {
-    console.log('reminder')
+    console.log("delete reminder");
+  };
+
+  saveReminder = () => {
+    console.log("save reminder");
   };
 
   state = {

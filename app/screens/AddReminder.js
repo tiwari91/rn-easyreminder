@@ -8,10 +8,13 @@ import {
   ScrollView,
   StatusBar,
   TouchableOpacity,
-  Switch
+  Switch,
+  Image,
+  Dimensions
 } from "react-native";
 import InputWithButton from "../components/TextInput/InputWithButton";
 import DateTimePicker from "react-native-modal-datetime-picker";
+
 import Icon from "react-native-vector-icons/Ionicons";
 import ChevronIcon from "react-native-vector-icons/EvilIcons";
 
@@ -44,15 +47,20 @@ class AddReminder extends Component {
         <View style={styles.topView}>
           <TextInput
             style={styles.inputText}
-            placeholder="Enter your text!"
+            placeholder="Enter your text"
             onChangeText={text => this.setState({ text })}
             editable={true}
             multiline={true}
             maxLength={40}
+            placeholderTextColor="white"
+            autoCorrect={false}
+            autoCapitalize="none"
+            underlineColorAndroid="transparent"
           />
+          
         </View>
 
-        <View style={{ flex: 2 }}>
+        <View style={styles.bottomView}>
           <TouchableOpacity
             style={styles.dateTimePickerRow}
             onPress={this._showDatePicker}
@@ -79,7 +87,7 @@ class AddReminder extends Component {
             <View style={{ flexDirection: "row" }}>
               <Icon color="white" size={26} name="ios-repeat" />
 
-              <View style={{ marginLeft: 34 }}>
+              <View style={{ marginLeft: 45 }}>
                 <Text style={{ fontSize: 15, color: "white" }}>Repeat</Text>
                 <Text style={{ fontSize: 15, color: "white" }}>
                   Every 2 days
@@ -134,36 +142,50 @@ class AddReminder extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#333"
+    backgroundColor: "#374046"
   },
   topView: {
     backgroundColor: "#65799b",
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: "flex-end"
+  },
+  bottomView: {
+    flex: 2,
+    justifyContent: "space-around"
+    //marginTop: 50
   },
   inputText: {
+    //marginTop: 170,
     padding: 10,
     fontSize: 30,
-    color: "#ffffff",
-    borderBottomWidth:1
+    color: "white",
+    borderBottomWidth: 1,
+    //backgroundColor: "red",
+    marginHorizontal: 20,
+    marginBottom: 10,
   },
   dateTimePickerRow: {
     flexDirection: "row",
     padding: 10,
     marginHorizontal: 20,
-    marginTop: 20
+    marginTop: 20,
+   // backgroundColor: "red"
+    // height: 100,
+    // alignItems: "center"
   },
   dateContent: {
     marginLeft: 20,
-    paddingHorizontal: 12
+    paddingHorizontal: 22
   },
   repeatRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
     marginHorizontal: 20,
-    marginTop: 20
+    marginTop: 20,
+  //  backgroundColor: "red"
+    //height: 100,
+    //alignItems: "center"
   }
 });
 

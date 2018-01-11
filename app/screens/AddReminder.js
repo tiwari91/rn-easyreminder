@@ -1,0 +1,170 @@
+import React, { Component } from "react";
+import {
+  View,
+  TextInput,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  StatusBar,
+  TouchableOpacity,
+  Switch
+} from "react-native";
+import InputWithButton from "../components/TextInput/InputWithButton";
+import DateTimePicker from "react-native-modal-datetime-picker";
+import Icon from "react-native-vector-icons/Ionicons";
+import ChevronIcon from "react-native-vector-icons/EvilIcons";
+
+class AddReminder extends Component {
+  state = {
+    text: " ",
+    isDatePickerVisible: false,
+    isTimePickerVisible: false
+  };
+
+  _showDatePicker = () => this.setState({ isDatePickerVisible: true });
+  _hideDatePicker = () => this.setState({ isDatePickerVisible: false });
+  _handleDatePicked = date => {
+    console.log("A date has been picked: ", date);
+    this._hideDatePicker();
+  };
+
+  _showTimePicker = () => this.setState({ isTimePickerVisible: true });
+  _hideTimePicker = () => this.setState({ isTimePickerVisible: false });
+  _handleTimePicked = time => {
+    console.log("A time has been picked: ", time);
+    this._hideTimePicker();
+  };
+
+  onChangeRepeat = () => {};
+
+  render() {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.topView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="Enter your text!"
+            onChangeText={text => this.setState({ text })}
+            editable={true}
+            multiline={true}
+            maxLength={40}
+          />
+        </View>
+
+        <View style={{ flex: 2 }}>
+          <TouchableOpacity
+            style={styles.dateTimePickerRow}
+            onPress={this._showDatePicker}
+          >
+            <Icon color="white" size={26} name="ios-calendar-outline" />
+            <View style={styles.dateContent}>
+              <Text style={{ fontSize: 15, color: "white" }}>Date</Text>
+              <Text style={{ fontSize: 15, color: "white" }}>DateText</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.dateTimePickerRow}
+            onPress={this._showTimePicker}
+          >
+            <Icon color="white" size={26} name="ios-time-outline" />
+            <View style={styles.dateContent}>
+              <Text style={{ fontSize: 15, color: "white" }}>Time</Text>
+              <Text style={{ fontSize: 15, color: "white" }}>TimeText</Text>
+            </View>
+          </TouchableOpacity>
+
+          <View style={styles.repeatRow}>
+            <View style={{ flexDirection: "row" }}>
+              <Icon color="white" size={26} name="ios-repeat" />
+
+              <View style={{ marginLeft: 34 }}>
+                <Text style={{ fontSize: 15, color: "white" }}>Repeat</Text>
+                <Text style={{ fontSize: 15, color: "white" }}>
+                  Every 2 days
+                </Text>
+              </View>
+            </View>
+
+            <Switch
+              value={true}
+              disabled={false}
+              onValueChange={this.onChangeRepeat}
+            />
+          </View>
+
+          <View style={styles.dateTimePickerRow}>
+            <View>
+              <TouchableOpacity onPress={this.upCount}>
+                <ChevronIcon color="white" size={20} name="chevron-up" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.downCount}>
+                <ChevronIcon color="white" size={20} name="chevron-down" />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.dateContent}>
+              <Text style={{ fontSize: 15, color: "white" }}>
+                Repetition Interval
+              </Text>
+              <Text style={{ fontSize: 15, color: "white" }}>2</Text>
+            </View>
+          </View>
+
+          <DateTimePicker
+            isVisible={this.state.isDatePickerVisible}
+            onConfirm={this._handleDatePicked}
+            onCancel={this._hideDatePicker}
+            mode="date"
+          />
+
+          <DateTimePicker
+            isVisible={this.state.isTimePickerVisible}
+            onConfirm={this._handleTimePicked}
+            onCancel={this._hideTimePicker}
+            mode="time"
+          />
+        </View>
+      </SafeAreaView>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#333"
+  },
+  topView: {
+    backgroundColor: "#65799b",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  inputText: {
+    padding: 10,
+    fontSize: 30,
+    color: "#ffffff",
+    borderBottomWidth:1
+  },
+  dateTimePickerRow: {
+    flexDirection: "row",
+    padding: 10,
+    marginHorizontal: 20,
+    marginTop: 20
+  },
+  dateContent: {
+    marginLeft: 20,
+    paddingHorizontal: 12
+  },
+  repeatRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+    marginHorizontal: 20,
+    marginTop: 20
+  }
+});
+
+export default AddReminder;

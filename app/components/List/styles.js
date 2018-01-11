@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
-    // backgroundColor: "#5D6874"
+    backgroundColor: '#5D6874',
   },
 
   listLeft: {
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
 
   textContent: {
-    // color: "white",
+    color: 'white',
     fontSize: 14,
     paddingTop: 5,
   },

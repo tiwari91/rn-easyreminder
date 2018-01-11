@@ -20,11 +20,18 @@ import ChevronIcon from "react-native-vector-icons/EvilIcons";
 import DeleteIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
 class AddReminder extends Component {
-  static navigationOptions = ({ navigation }) => ({
+  static navigationOptions = {
     headerRight: (
-    <DeleteIcon size={26} name="delete" />
-  )
-  });
+      <TouchableOpacity onPress={this._deleteReminder}>
+        <DeleteIcon color="white" size={26} name="delete" />
+      </TouchableOpacity>
+    ),
+    headerTintColor: "white",
+    headerStyle: {
+      backgroundColor: "#374046",
+      elevation: null
+    }
+  };
 
   state = {
     text: " ",
@@ -47,6 +54,10 @@ class AddReminder extends Component {
   };
 
   onChangeRepeat = () => {};
+
+  _deleteReminder = () => {
+    console.log('this delete reminder');
+  };
 
   render() {
     return (

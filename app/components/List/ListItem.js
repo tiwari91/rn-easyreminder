@@ -45,7 +45,11 @@ class ListItem extends React.Component {
 
               <View style={styles.icon}>
                 <TouchableOpacity>
-                  <Icon size={26} name="ios-notifications-outline" />
+                  <Icon
+                    color="white"
+                    size={26}
+                    name="ios-notifications-outline"
+                  />
                 </TouchableOpacity>
               </View>
             </View>

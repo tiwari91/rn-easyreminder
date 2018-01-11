@@ -10,14 +10,22 @@ import {
   TouchableOpacity,
   Switch,
   Image,
-  Dimensions
+  Dimensions,
+  Button
 } from "react-native";
 import DateTimePicker from "react-native-modal-datetime-picker";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import ChevronIcon from "react-native-vector-icons/EvilIcons";
+import DeleteIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
 class AddReminder extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    headerRight: (
+    <DeleteIcon size={26} name="delete" />
+  )
+  });
+
   state = {
     text: " ",
     isDatePickerVisible: false,
@@ -56,7 +64,6 @@ class AddReminder extends Component {
             autoCapitalize="none"
             underlineColorAndroid="transparent"
           />
-          
         </View>
 
         <View style={styles.bottomView}>
@@ -161,14 +168,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     //backgroundColor: "red",
     marginHorizontal: 20,
-    marginBottom: 10,
+    marginBottom: 10
   },
   dateTimePickerRow: {
     flexDirection: "row",
     padding: 10,
     marginHorizontal: 20,
-    marginTop: 20,
-   // backgroundColor: "red"
+    marginTop: 20
+    // backgroundColor: "red"
     // height: 100,
     // alignItems: "center"
   },
@@ -181,8 +188,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     marginHorizontal: 20,
-    marginTop: 20,
-  //  backgroundColor: "red"
+    marginTop: 20
+    //  backgroundColor: "red"
     //height: 100,
     //alignItems: "center"
   }

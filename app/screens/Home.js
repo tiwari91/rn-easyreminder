@@ -14,7 +14,7 @@ class Home extends Component {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={10}>
-          <StatusBar backgroundColor="blue" barStyle="light-content" />
+          {/* <StatusBar backgroundColor="blue" barStyle="light-content" /> */}
           <Header />
           <ListItem />
         </KeyboardAvoidingView>

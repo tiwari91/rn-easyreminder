@@ -1,5 +1,6 @@
 import { StatusBar } from 'react-native';
 import { StackNavigator } from 'react-navigation';
+import { Image, TouchableOpacity, Button } from 'react-native';
 
 import Home from '../screens/Home';
 import AddReminder from '../screens/AddReminder';
@@ -10,6 +11,8 @@ export default StackNavigator(
       screen: Home,
       navigationOptions: {
         header: () => null,
+        // headerTitle: 'rEMINDLY',
+
       },
     },
     AddReminder: {

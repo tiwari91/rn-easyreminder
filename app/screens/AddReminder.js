@@ -23,6 +23,9 @@ import ActionButton from "react-native-action-button";
 
 import Moment from "moment";
 import { Dropdown } from "react-native-material-dropdown";
+import { AsyncStorage } from "react-native";
+
+const REMINDER_KEY = "@MySuperStore:reminderKey";
 
 class AddReminder extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -52,12 +55,6 @@ class AddReminder extends Component {
       }
     };
   };
-  componentDidMount() {
-    this.props.navigation.setParams({
-      handleRemove: this.deleteReminder,
-      handleSave: this.saveReminder
-    });
-  }
 
   state = {
     text: " ",
@@ -72,8 +69,16 @@ class AddReminder extends Component {
     switchValue: true,
     repeatDays: 0,
 
-    notify: false
+    notify: false,
+    repeatInterval: 0
   };
+
+  componentDidMount() {
+    this.props.navigation.setParams({
+      handleRemove: this.deleteReminder,
+      handleSave: this.saveReminder
+    });
+  }
 
   _showDatePicker = () => this.setState({ isDatePickerVisible: true });
   _hideDatePicker = () => this.setState({ isDatePickerVisible: false });
@@ -118,6 +123,9 @@ class AddReminder extends Component {
   };
 
   _handlePickerVal = (itemValue, itemIndex) => {
+    this.setState({
+      repeatInterval: itemValue
+    });
     console.log(itemValue, itemIndex);
   };
 
@@ -125,8 +133,34 @@ class AddReminder extends Component {
     console.log("delete reminder");
   };
 
-  saveReminder = () => {
+  saveReminder = async () => {
     console.log("save reminder");
+
+    console.log("textInput", this.state.text);
+    console.log("notify", this.state.notify);
+    console.log("date", this.state.dateText);
+    console.log("time", this.state.timeText);
+    console.log("repeatInterval", this.state.repeatInterval);
+    console.log("upIntervalCount", this.state.upIntervalCount);
+
+    let reminderObject = {
+      inputText: this.state.text,
+      notify: this.state.notify,
+      date: this.state.dateText,
+      time: this.state.timeText,
+      repeatInterval: this.state.repeatInterval,
+      upIntervalCount: this.state.upIntervalCount
+    };
+
+    AsyncStorage.getItem(REMINDER_KEY, (err, result) => {
+      console.log(result);
+      // if (result === null) {
+      //   AsyncStorage.setItem(
+      //     "@MySuperStore:reminderKey",
+      //     JSON.stringify(reminderObject)
+      //   );
+      // }
+    });
   };
 
   _handleNotification = () => {
@@ -301,7 +335,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     //backgroundColor: "red",
     marginHorizontal: 20,
-    marginBottom: 80,
+    marginBottom: 80
   },
   dateTimePickerRow: {
     flexDirection: "row",

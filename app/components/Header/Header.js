@@ -7,9 +7,9 @@ import styles from './styles';
 const Header = () => (
   <View style={styles.navbar}>
     <Text style={{ color: 'white', fontSize: 18 }}>Reminder</Text>
-    <TouchableOpacity>
+    {/* <TouchableOpacity>
       <Icon size={26} name="md-more" color="#ffffff" />
-    </TouchableOpacity>
+    </TouchableOpacity> */}
   </View>
 );
 

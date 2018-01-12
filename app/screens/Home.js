@@ -9,7 +9,7 @@ class Home extends Component {
   render() {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#374046' }}>
-        {/* <StatusBar backgroundColor="#5D6874" barStyle="light-content" /> */}
+        <StatusBar barStyle="light-content" />
         <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={10}>
           <Header />
           <ListItem />

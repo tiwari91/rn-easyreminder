@@ -26,6 +26,7 @@
   "dependencies": {
     "expo": "^23.0.4",
     "moment": "^2.20.1",
+    "moment-timezone": "^0.5.14",
     "react": "16.0.0",
     "react-moment": "^0.6.8",
     "react-native": "0.50.3",

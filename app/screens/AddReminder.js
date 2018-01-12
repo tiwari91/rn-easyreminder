@@ -18,6 +18,7 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import Icon from "react-native-vector-icons/Ionicons";
 import ChevronIcon from "react-native-vector-icons/EvilIcons";
 import NavIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import Moment from "moment";
 
 class AddReminder extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -44,7 +45,6 @@ class AddReminder extends Component {
       headerTitleStyle: {
         right: 100,
         alignSelf: "flex-end"
-        //fontFamily: "MuseoSansRounded-300"
       }
     };
   };
@@ -67,27 +67,59 @@ class AddReminder extends Component {
 
   state = {
     text: " ",
+    dateText: "",
+    timeText: "",
+    todayDate: Moment().format("LL"),
     isDatePickerVisible: false,
-    isTimePickerVisible: false
+    isTimePickerVisible: false,
+
+    upIntervalCount: 0
   };
 
   _showDatePicker = () => this.setState({ isDatePickerVisible: true });
   _hideDatePicker = () => this.setState({ isDatePickerVisible: false });
   _handleDatePicked = date => {
-    console.log("A date has been picked: ", date);
+    //console.log("A date has been picked: ", date);
+    this.setState({
+      dateText: date
+    });
     this._hideDatePicker();
   };
 
   _showTimePicker = () => this.setState({ isTimePickerVisible: true });
   _hideTimePicker = () => this.setState({ isTimePickerVisible: false });
   _handleTimePicked = time => {
-    console.log("A time has been picked: ", time);
+    //console.log("A time has been picked: ", time);
+    this.setState({
+      timeText: time
+    });
     this._hideTimePicker();
+  };
+
+  upCount = () => {
+    this.setState({
+      upIntervalCount: this.state.upIntervalCount + 1
+    });
+  };
+
+  downCount = () => {
+    if (this.state.upIntervalCount <= 0) {
+      this.setState({
+        upIntervalCount: 0
+      });
+    } else {
+      this.setState({
+        upIntervalCount: this.state.upIntervalCount - 1
+      });
+    }
   };
 
   onChangeRepeat = () => {};
 
   render() {
+    Moment.locale("en");
+    //console.log(new Date(this.state.todayDate));
+
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.topView}>
@@ -113,7 +145,11 @@ class AddReminder extends Component {
             <Icon color="white" size={26} name="ios-calendar-outline" />
             <View style={styles.dateContent}>
               <Text style={{ fontSize: 15, color: "white" }}>Date</Text>
-              <Text style={{ fontSize: 15, color: "white" }}>DateText</Text>
+              <Text style={{ fontSize: 15, color: "white" }}>
+                {this.state.dateText
+                  ? Moment(this.state.dateText).format("LL")
+                  : this.state.todayDate}
+              </Text>
             </View>
           </TouchableOpacity>
 
@@ -124,7 +160,11 @@ class AddReminder extends Component {
             <Icon color="white" size={26} name="ios-time-outline" />
             <View style={styles.dateContent}>
               <Text style={{ fontSize: 15, color: "white" }}>Time</Text>
-              <Text style={{ fontSize: 15, color: "white" }}>TimeText</Text>
+              <Text style={{ fontSize: 15, color: "white" }}>
+                {this.state.timeText
+                  ? Moment(this.state.timeText).format("hh:mm A")
+                  : Moment(new Date(this.state.todayDate)).format("hh:mm A")}
+              </Text>
             </View>
           </TouchableOpacity>
 
@@ -161,7 +201,9 @@ class AddReminder extends Component {
               <Text style={{ fontSize: 15, color: "white" }}>
                 Repetition Interval
               </Text>
-              <Text style={{ fontSize: 15, color: "white" }}>2</Text>
+              <Text style={{ fontSize: 15, color: "white" }}>
+                {this.state.upIntervalCount}
+              </Text>
             </View>
           </View>
 
@@ -170,6 +212,7 @@ class AddReminder extends Component {
             onConfirm={this._handleDatePicked}
             onCancel={this._hideDatePicker}
             mode="date"
+            minimumDate={new Date(this.state.todayDate)}
           />
 
           <DateTimePicker

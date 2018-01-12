@@ -163,7 +163,6 @@ class AddReminder extends Component {
                 <NotifyIcon color="white" size={20} name="notifications" />
               )
             }
-            position='left'
           />
         </View>
 

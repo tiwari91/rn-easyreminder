@@ -34,7 +34,7 @@ class AddReminder extends Component {
             <NavIcon color="white" size={26} name="delete" />
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ marginLeft: 20 }}
+            style={{ marginLeft: 20, right: 10 }}
             onPress={() => params.handleSave()}
           >
             <NavIcon color="white" size={26} name="check" />
@@ -70,7 +70,9 @@ class AddReminder extends Component {
 
     upIntervalCount: 0,
     switchValue: true,
-    repeatDays: 0
+    repeatDays: 0,
+
+    notify: false
   };
 
   _showDatePicker = () => this.setState({ isDatePickerVisible: true });
@@ -127,6 +129,12 @@ class AddReminder extends Component {
     console.log("save reminder");
   };
 
+  _handleNotification = () => {
+    this.setState({
+      notify: !this.state.notify
+    });
+  };
+
   render() {
     Moment.locale("en");
 
@@ -146,12 +154,16 @@ class AddReminder extends Component {
           />
           <ActionButton
             buttonColor="#65799b"
-            onPress={() => {
-              console.log("hi");
-            }}
-            icon={<NavIcon color="white" size={20} name="star-outline" />}
-            
-            //position="left"
+            onPress={this._handleNotification}
+            offsetY={0}
+            icon={
+              this.state.notify === false ? (
+                <NotifyIcon color="white" size={20} name="notifications-off" />
+              ) : (
+                <NotifyIcon color="white" size={20} name="notifications" />
+              )
+            }
+            position='left'
           />
         </View>
 
@@ -192,9 +204,11 @@ class AddReminder extends Component {
               <View
                 style={{
                   width: 96,
+                  height: 20,
                   marginLeft: 45,
                   top: -30
                 }}
+                pointerEvents={this.state.switchValue === true ? null : "none"}
               >
                 <Dropdown
                   onChangeText={this._handlePickerVal}
@@ -273,7 +287,7 @@ const styles = StyleSheet.create({
   topView: {
     backgroundColor: "#65799b",
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "flex-end"
   },
   bottomView: {
     flex: 2,
@@ -282,20 +296,20 @@ const styles = StyleSheet.create({
   },
   inputText: {
     //marginTop: 170,
-    //padding: 10,
+    padding: 10,
     fontSize: 30,
     color: "white",
     borderBottomWidth: 1,
     //backgroundColor: "red",
-    marginHorizontal: 20
-    //marginBottom: 10,
+    marginHorizontal: 20,
+    marginBottom: 80,
   },
   dateTimePickerRow: {
     flexDirection: "row",
     padding: 10,
     marginHorizontal: 20,
     marginTop: 20
-    // backgroundColor: "red"
+    //backgroundColor: "red"
     // height: 100,
     // alignItems: "center"
   },
@@ -309,7 +323,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginHorizontal: 20,
     marginTop: 20
-    //  backgroundColor: "red"
+    //backgroundColor: "red"
     //height: 100,
     //alignItems: "center"
   }

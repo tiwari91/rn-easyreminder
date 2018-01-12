@@ -18,7 +18,11 @@ import DateTimePicker from "react-native-modal-datetime-picker";
 import Icon from "react-native-vector-icons/Ionicons";
 import ChevronIcon from "react-native-vector-icons/EvilIcons";
 import NavIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import NotifyIcon from "react-native-vector-icons/MaterialIcons";
+import ActionButton from "react-native-action-button";
+
 import Moment from "moment";
+import { Dropdown } from "react-native-material-dropdown";
 
 class AddReminder extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -65,7 +69,8 @@ class AddReminder extends Component {
     isTimePickerVisible: false,
 
     upIntervalCount: 0,
-    switchValue: true
+    switchValue: true,
+    repeatDays: 0
   };
 
   _showDatePicker = () => this.setState({ isDatePickerVisible: true });
@@ -107,8 +112,11 @@ class AddReminder extends Component {
   };
 
   _handleToggleSwitch = () => {
-    this.setState({ switchValue: !this.state.switchValue })
-    console.log(this.state.switchValue);
+    this.setState({ switchValue: !this.state.switchValue });
+  };
+
+  _handlePickerVal = (itemValue, itemIndex) => {
+    console.log(itemValue, itemIndex);
   };
 
   deleteReminder = () => {
@@ -129,13 +137,21 @@ class AddReminder extends Component {
             style={styles.inputText}
             placeholder="Enter your text"
             onChangeText={text => this.setState({ text })}
-            editable={true}
             multiline={true}
             maxLength={40}
             placeholderTextColor="white"
             autoCorrect={false}
             autoCapitalize="none"
             underlineColorAndroid="transparent"
+          />
+          <ActionButton
+            buttonColor="#65799b"
+            onPress={() => {
+              console.log("hi");
+            }}
+            icon={<NavIcon color="white" size={20} name="star-outline" />}
+            
+            //position="left"
           />
         </View>
 
@@ -173,12 +189,32 @@ class AddReminder extends Component {
           <View style={styles.repeatRow}>
             <View style={{ flexDirection: "row" }}>
               <Icon color="white" size={26} name="ios-repeat" />
-
-              <View style={{ marginLeft: 45 }}>
-                <Text style={{ fontSize: 15, color: "white" }}>Repeat</Text>
-                <Text style={{ fontSize: 15, color: "white" }}>
-                  Every 2 days
-                </Text>
+              <View
+                style={{
+                  width: 96,
+                  marginLeft: 45,
+                  top: -30
+                }}
+              >
+                <Dropdown
+                  onChangeText={this._handlePickerVal}
+                  label="Repeat"
+                  textColor="white"
+                  baseColor="white"
+                  itemColor="white"
+                  pickerStyle={{ backgroundColor: "#374046" }}
+                  data={[
+                    {
+                      value: "1"
+                    },
+                    {
+                      value: "2"
+                    },
+                    {
+                      value: "3"
+                    }
+                  ]}
+                />
               </View>
             </View>
 
@@ -237,7 +273,7 @@ const styles = StyleSheet.create({
   topView: {
     backgroundColor: "#65799b",
     flex: 1,
-    justifyContent: "flex-end"
+    justifyContent: "center"
   },
   bottomView: {
     flex: 2,
@@ -246,13 +282,13 @@ const styles = StyleSheet.create({
   },
   inputText: {
     //marginTop: 170,
-    padding: 10,
+    //padding: 10,
     fontSize: 30,
     color: "white",
     borderBottomWidth: 1,
     //backgroundColor: "red",
-    marginHorizontal: 20,
-    marginBottom: 10
+    marginHorizontal: 20
+    //marginBottom: 10,
   },
   dateTimePickerRow: {
     flexDirection: "row",

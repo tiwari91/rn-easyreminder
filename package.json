@@ -35,7 +35,10 @@
     "react-native-datepicker": "^1.6.0",
     "react-native-elements": "^0.18.5",
     "react-native-extended-stylesheet": "^0.8.0",
+    "react-native-material-dropdown": "^0.6.1",
     "react-native-modal-datetime-picker": "^4.13.0",
+    "react-native-modal-dropdown": "^0.6.0",
+    "react-native-picker": "^4.3.4",
     "react-native-vector-icons": "^4.5.0",
     "react-navigation": "^1.0.0-beta.23"
   }

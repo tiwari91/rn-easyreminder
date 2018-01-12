@@ -49,31 +49,23 @@ class AddReminder extends Component {
     };
   };
   componentDidMount() {
-    //console.log(this.props.navigation);
-
     this.props.navigation.setParams({
       handleRemove: this.deleteReminder,
       handleSave: this.saveReminder
     });
   }
 
-  deleteReminder = () => {
-    console.log("delete reminder");
-  };
-
-  saveReminder = () => {
-    console.log("save reminder");
-  };
-
   state = {
     text: " ",
     dateText: "",
     timeText: "",
+
     todayDate: Moment().format("LL"),
     isDatePickerVisible: false,
     isTimePickerVisible: false,
 
-    upIntervalCount: 0
+    upIntervalCount: 0,
+    switchValue: true
   };
 
   _showDatePicker = () => this.setState({ isDatePickerVisible: true });
@@ -114,11 +106,21 @@ class AddReminder extends Component {
     }
   };
 
-  onChangeRepeat = () => {};
+  _handleToggleSwitch = () => {
+    this.setState({ switchValue: !this.state.switchValue })
+    console.log(this.state.switchValue);
+  };
+
+  deleteReminder = () => {
+    console.log("delete reminder");
+  };
+
+  saveReminder = () => {
+    console.log("save reminder");
+  };
 
   render() {
     Moment.locale("en");
-    //console.log(new Date(this.state.todayDate));
 
     return (
       <SafeAreaView style={styles.container}>
@@ -181,9 +183,9 @@ class AddReminder extends Component {
             </View>
 
             <Switch
-              value={true}
+              value={this.state.switchValue}
               disabled={false}
-              onValueChange={this.onChangeRepeat}
+              onValueChange={this._handleToggleSwitch}
             />
           </View>
 

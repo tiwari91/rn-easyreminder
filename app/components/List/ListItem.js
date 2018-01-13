@@ -1,30 +1,47 @@
 import React from 'react';
-import { View, FlatList, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  AsyncStorage,
+} from 'react-native';
 import { List, Avatar } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from './styles';
+
+const REMINDER_KEY_OBJ = 'reminderKeyObj';
 
 class ListItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-        {
-          key: 'a',
-          title: 'Learn French',
-          date: '01-08-2018 01:00pm',
-          duration: 'Every 5 min',
-          avatar: 'avatar',
-        },
-        {
-          key: 'b',
-          title: 'Take the dog to park',
-          date: '01-09-2018 03:00pm',
-          duration: 'Every 2 day',
-          avatar: 'avatar',
-        },
-      ],
+      data: [],
     };
+  }
+
+  componentDidMount() {
+    AsyncStorage.getAllKeys().then((keys) => {
+      keys.forEach((element) => {
+        if (element !== REMINDER_KEY_OBJ) {
+          AsyncStorage.getItem(element)
+            .then(JSON.parse)
+            .then((response) => {
+              this.setState(state => ({
+                data: state.data.concat([
+                  {
+                    key: element,
+                    title: response.inputText,
+                    date: `${response.date} ' ' ${response.time}`,
+                    duration: response.repeatInterval,
+                    avatar: 'avatar',
+                  },
+                ]),
+              }));
+            });
+        }
+      });
+    });
   }
 
   render() {

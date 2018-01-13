@@ -144,43 +144,35 @@ class AddReminder extends Component {
   };
 
   saveReminder = async () => {
-    console.log("date", this.state.dateText);
-    console.log("time", this.state.timeText);
+    let reminderObject = {
+      inputText: this.state.text,
+      notify: this.state.notify,
+      date: this.state.dateText,
+      time: this.state.timeText,
+      repeatInterval: this.state.repeatInterval,
+      upIntervalCount: this.state.upIntervalCount
+    };
 
-    // let reminderObject = {
-    //   inputText: this.state.text,
-    //   notify: this.state.notify,
-    //   date: this.state.dateText,
-    //   time: this.state.timeText,
-    //   repeatInterval: this.state.repeatInterval,
-    //   upIntervalCount: this.state.upIntervalCount
-    // };
-    // const CURRENT_KEY =
-    //   REMINDER_KEY + "_" + Math.floor(Math.random() * 1000000) + 1;
-    // AsyncStorage.getAllKeys().then(keys => {
-    //   keys.forEach(element => {
-    //     AsyncStorage.getItem(element).then(value => {
-    //       console.log("key: ", element);
-    //       console.log("value: ", JSON.parse(value));
-    //     });
-    //   });
-    // });
-    // AsyncStorage.getItem(REMINDER_KEY_OBJ, (err, result) => {
-    //   const restoredArray = JSON.parse(result);
-    //   if (restoredArray !== null) {
-    //     if (restoredArray.indexOf(CURRENT_KEY) === -1) {
-    //       restoredArray.push(CURRENT_KEY);
-    //       AsyncStorage.setItem(REMINDER_KEY_OBJ, JSON.stringify(restoredArray));
-    //       AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject));
-    //     }
-    //   } else {
-    //     AsyncStorage.setItem(
-    //       REMINDER_KEY_OBJ,
-    //       JSON.stringify(new Array(CURRENT_KEY))
-    //     );
-    //     AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject));
-    //   }
-    // });
+    const CURRENT_KEY =
+      REMINDER_KEY + "_" + Math.floor(Math.random() * 1000000) + 1;
+    
+    AsyncStorage.getItem(REMINDER_KEY_OBJ, (err, result) => {
+      const restoredArray = JSON.parse(result);
+      if (restoredArray !== null) {
+        if (restoredArray.indexOf(CURRENT_KEY) === -1) {
+          restoredArray.push(CURRENT_KEY);
+          AsyncStorage.setItem(REMINDER_KEY_OBJ, JSON.stringify(restoredArray));
+          AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject));
+        }
+      } else {
+        AsyncStorage.setItem(
+          REMINDER_KEY_OBJ,
+          JSON.stringify(new Array(CURRENT_KEY))
+        );
+        AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject));
+      }
+    });
+
   };
 
   _handleNotification = () => {

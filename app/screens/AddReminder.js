@@ -155,7 +155,7 @@ class AddReminder extends Component {
 
     const CURRENT_KEY =
       REMINDER_KEY + "_" + Math.floor(Math.random() * 1000000) + 1;
-    
+
     AsyncStorage.getItem(REMINDER_KEY_OBJ, (err, result) => {
       const restoredArray = JSON.parse(result);
       if (restoredArray !== null) {
@@ -171,8 +171,11 @@ class AddReminder extends Component {
         );
         AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject));
       }
+    }).done(() => {
+      alert("reminder added successfully");
+      this.props.navigation.state.params.handleOnNavigateBack();
+      this.props.navigation.goBack();
     });
-
   };
 
   _handleNotification = () => {

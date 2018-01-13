@@ -34,19 +34,25 @@ class Home extends Component {
             .then(JSON.parse)
             .then(response => {
               this.setState({
-                data: this.state.data.concat({
-                  key: element,
-                  title: response.inputText,
-                  date: `${response.date} ${response.time}`,
-                  duration: `Every ${response.repeatInterval} days`,
-                  notify: response.notify,
-                  avatar: "avatar"
-                })
+                data: this.state.data
+                  .filter(b => b.key !== element)
+                  .concat({
+                    key: element,
+                    title: response.inputText,
+                    date: `${response.date} ${response.time}`,
+                    duration: `Every ${response.repeatInterval} days`,
+                    notify: response.notify,
+                    avatar: "avatar"
+                  })
               });
             });
         }
       });
     });
+  };
+
+  handleOnNavigateBack = () => {
+    this._fetchData();
   };
 
   render() {
@@ -61,7 +67,8 @@ class Home extends Component {
           buttonColor="rgba(231,76,60,1)"
           onPress={() =>
             this.props.navigation.navigate("AddReminder", {
-              title: "Create a Reminder"
+              title: "Create a Reminder",
+              handleOnNavigateBack: this.handleOnNavigateBack
             })
           }
         />

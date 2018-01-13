@@ -273,7 +273,7 @@ class AddReminder extends Component {
                   width: 96,
                   height: 20,
                   marginLeft: 45,
-                  top: -30
+                  top: -30,
                 }}
                 pointerEvents={this.state.switchValue === true ? null : "none"}
               >
@@ -303,6 +303,7 @@ class AddReminder extends Component {
               value={this.state.switchValue}
               disabled={false}
               onValueChange={this._handleToggleSwitch}
+              tintColor="#ff0000"
             />
           </View>
 

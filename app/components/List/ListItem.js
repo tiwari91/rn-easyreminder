@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, FlatList, Text, TouchableOpacity } from 'react-native';
 import { List, Avatar } from 'react-native-elements';
+
 import PropTypes from 'prop-types';
 import NotifyIcon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
-
 
 const ListItem = ({ renderData }) => (
   <List containerStyle={{ borderTopWidth: 1, marginTop: 0 }}>
@@ -14,6 +14,8 @@ const ListItem = ({ renderData }) => (
         <View style={styles.listContainer}>
           <View style={styles.listLeft}>
             <Avatar medium rounded title={item.title.charAt(0)} />
+            
+
             <View style={styles.contentDetail}>
               <Text style={styles.textContent}>{item.title}</Text>
               <Text style={styles.textContent}>{item.date}</Text>

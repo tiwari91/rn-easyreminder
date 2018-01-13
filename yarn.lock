@@ -4915,6 +4915,10 @@ react-native-modal@3.1.0:
     prop-types "15.5.10"
     react-native-animatable "^1.2.3"
 
+react-native-picker@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/react-native-picker/-/react-native-picker-4.3.4.tgz#8a5ebcd7c31d315a3d54538157be7ff2dfa276eb"
+
 react-native-safe-module@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-native-safe-module/-/react-native-safe-module-1.2.0.tgz#a23824ca24edc2901913694a76646475113d570d"

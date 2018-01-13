@@ -22,10 +22,13 @@ import NotifyIcon from "react-native-vector-icons/MaterialIcons";
 import ActionButton from "react-native-action-button";
 
 import Moment from "moment";
+import MomentTZ from "moment-timezone";
+
 import { Dropdown } from "react-native-material-dropdown";
 import { AsyncStorage } from "react-native";
 
-const REMINDER_KEY = "@MySuperStore:reminderKey";
+const REMINDER_KEY = "reminderKey";
+const REMINDER_KEY_OBJ = "reminderKeyObj";
 
 class AddReminder extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -58,10 +61,16 @@ class AddReminder extends Component {
 
   state = {
     text: " ",
-    dateText: "",
-    timeText: "",
+    dateText: MomentTZ()
+      .tz("America/Los_Angeles")
+      .format("LL"),
+    timeText: MomentTZ()
+      .tz("America/Los_Angeles")
+      .format("hh:mm A"),
 
-    todayDate: Moment().format("LL"),
+    todayDate: MomentTZ()
+      .tz("America/Los_Angeles")
+      .format("LL"),
     isDatePickerVisible: false,
     isTimePickerVisible: false,
 
@@ -83,9 +92,10 @@ class AddReminder extends Component {
   _showDatePicker = () => this.setState({ isDatePickerVisible: true });
   _hideDatePicker = () => this.setState({ isDatePickerVisible: false });
   _handleDatePicked = date => {
-    //console.log("A date has been picked: ", date);
     this.setState({
-      dateText: date
+      dateText: MomentTZ(date)
+        .tz("America/Los_Angeles")
+        .format("LL")
     });
     this._hideDatePicker();
   };
@@ -93,9 +103,10 @@ class AddReminder extends Component {
   _showTimePicker = () => this.setState({ isTimePickerVisible: true });
   _hideTimePicker = () => this.setState({ isTimePickerVisible: false });
   _handleTimePicked = time => {
-    //console.log("A time has been picked: ", time);
     this.setState({
-      timeText: time
+      timeText: MomentTZ(time)
+        .tz("America/Los_Angeles")
+        .format("hh:mm A")
     });
     this._hideTimePicker();
   };
@@ -126,7 +137,6 @@ class AddReminder extends Component {
     this.setState({
       repeatInterval: itemValue
     });
-    console.log(itemValue, itemIndex);
   };
 
   deleteReminder = () => {
@@ -134,33 +144,43 @@ class AddReminder extends Component {
   };
 
   saveReminder = async () => {
-    console.log("save reminder");
-
-    console.log("textInput", this.state.text);
-    console.log("notify", this.state.notify);
     console.log("date", this.state.dateText);
     console.log("time", this.state.timeText);
-    console.log("repeatInterval", this.state.repeatInterval);
-    console.log("upIntervalCount", this.state.upIntervalCount);
 
-    let reminderObject = {
-      inputText: this.state.text,
-      notify: this.state.notify,
-      date: this.state.dateText,
-      time: this.state.timeText,
-      repeatInterval: this.state.repeatInterval,
-      upIntervalCount: this.state.upIntervalCount
-    };
-
-    AsyncStorage.getItem(REMINDER_KEY, (err, result) => {
-      console.log(result);
-      // if (result === null) {
-      //   AsyncStorage.setItem(
-      //     "@MySuperStore:reminderKey",
-      //     JSON.stringify(reminderObject)
-      //   );
-      // }
-    });
+    // let reminderObject = {
+    //   inputText: this.state.text,
+    //   notify: this.state.notify,
+    //   date: this.state.dateText,
+    //   time: this.state.timeText,
+    //   repeatInterval: this.state.repeatInterval,
+    //   upIntervalCount: this.state.upIntervalCount
+    // };
+    // const CURRENT_KEY =
+    //   REMINDER_KEY + "_" + Math.floor(Math.random() * 1000000) + 1;
+    // AsyncStorage.getAllKeys().then(keys => {
+    //   keys.forEach(element => {
+    //     AsyncStorage.getItem(element).then(value => {
+    //       console.log("key: ", element);
+    //       console.log("value: ", JSON.parse(value));
+    //     });
+    //   });
+    // });
+    // AsyncStorage.getItem(REMINDER_KEY_OBJ, (err, result) => {
+    //   const restoredArray = JSON.parse(result);
+    //   if (restoredArray !== null) {
+    //     if (restoredArray.indexOf(CURRENT_KEY) === -1) {
+    //       restoredArray.push(CURRENT_KEY);
+    //       AsyncStorage.setItem(REMINDER_KEY_OBJ, JSON.stringify(restoredArray));
+    //       AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject));
+    //     }
+    //   } else {
+    //     AsyncStorage.setItem(
+    //       REMINDER_KEY_OBJ,
+    //       JSON.stringify(new Array(CURRENT_KEY))
+    //     );
+    //     AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject));
+    //   }
+    // });
   };
 
   _handleNotification = () => {
@@ -170,8 +190,6 @@ class AddReminder extends Component {
   };
 
   render() {
-    Moment.locale("en");
-
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.topView}>
@@ -210,8 +228,10 @@ class AddReminder extends Component {
               <Text style={{ fontSize: 15, color: "white" }}>Date</Text>
               <Text style={{ fontSize: 15, color: "white" }}>
                 {this.state.dateText
-                  ? Moment(this.state.dateText).format("LL")
-                  : this.state.todayDate}
+                  ? this.state.dateText
+                  : MomentTZ()
+                      .tz("America/Los_Angeles")
+                      .format("LL")}
               </Text>
             </View>
           </TouchableOpacity>
@@ -225,8 +245,10 @@ class AddReminder extends Component {
               <Text style={{ fontSize: 15, color: "white" }}>Time</Text>
               <Text style={{ fontSize: 15, color: "white" }}>
                 {this.state.timeText
-                  ? Moment(this.state.timeText).format("hh:mm A")
-                  : Moment(new Date(this.state.todayDate)).format("hh:mm A")}
+                  ? this.state.timeText
+                  : MomentTZ()
+                      .tz("America/Los_Angeles")
+                      .format("hh:mm A")}
               </Text>
             </View>
           </TouchableOpacity>

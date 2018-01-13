@@ -7,7 +7,7 @@ import {
   AsyncStorage,
 } from 'react-native';
 import { List, Avatar } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/Ionicons';
+import NotifyIcon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
 
 const REMINDER_KEY_OBJ = 'reminderKeyObj';
@@ -23,21 +23,21 @@ class ListItem extends React.Component {
   componentDidMount() {
     AsyncStorage.getAllKeys().then((keys) => {
       keys.forEach((element) => {
+        // console.log(element);
         if (element !== REMINDER_KEY_OBJ) {
           AsyncStorage.getItem(element)
             .then(JSON.parse)
             .then((response) => {
-              this.setState(state => ({
-                data: state.data.concat([
-                  {
-                    key: element,
-                    title: response.inputText,
-                    date: `${response.date} ' ' ${response.time}`,
-                    duration: response.repeatInterval,
-                    avatar: 'avatar',
-                  },
-                ]),
-              }));
+              this.setState({
+                data: this.state.data.concat({
+                  key: element,
+                  title: response.inputText,
+                  date: `${response.date} ${response.time}`,
+                  duration: `Every ${response.repeatInterval} days`,
+                  notify: response.notify,
+                  avatar: 'avatar',
+                }),
+              });
             });
         }
       });
@@ -45,10 +45,11 @@ class ListItem extends React.Component {
   }
 
   render() {
+    const renderData = this.state.data;
     return (
       <List containerStyle={{ borderTopWidth: 1, marginTop: 0 }}>
         <FlatList
-          data={this.state.data}
+          data={renderData}
           renderItem={({ item }) => (
             <View style={styles.listContainer}>
               <View style={styles.listLeft}>
@@ -61,13 +62,24 @@ class ListItem extends React.Component {
               </View>
 
               <View style={styles.icon}>
-                <TouchableOpacity>
-                  <Icon
-                    color="white"
-                    size={26}
-                    name="ios-notifications-outline"
-                  />
-                </TouchableOpacity>
+                {item.notify === false ?
+                  <TouchableOpacity>
+                    <NotifyIcon
+                      color="white"
+                      size={20}
+                      name="notifications-off"
+                    />
+                  </TouchableOpacity> :
+                  <TouchableOpacity>
+                    <NotifyIcon
+                      color="white"
+                      size={20}
+                      name="notifications"
+                    />
+                  </TouchableOpacity>
+                }
+
+
               </View>
             </View>
           )}

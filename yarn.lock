@@ -4793,10 +4793,6 @@ react-devtools-core@^2.5.0:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-react-moment@^0.6.8:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/react-moment/-/react-moment-0.6.8.tgz#8612a90f3c8afec26fef6844806d84b9d9e3b212"
-
 react-native-action-button@^2.8.3:
   version "2.8.3"
   resolved "https://registry.yarnpkg.com/react-native-action-button/-/react-native-action-button-2.8.3.tgz#f8a2b01fcb9ea328106c355169c9fcb0bb41f2b0"

@@ -27,6 +27,7 @@
     "expo": "^23.0.4",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
+    "prop-types": "^15.6.0",
     "react": "16.0.0",
     "react-native": "0.50.3",
     "react-native-action-button": "^2.8.3",

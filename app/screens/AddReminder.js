@@ -11,7 +11,8 @@ import {
   Switch,
   Image,
   Dimensions,
-  Button
+  Button,
+  Alert
 } from "react-native";
 import DateTimePicker from "react-native-modal-datetime-picker";
 
@@ -172,9 +173,25 @@ class AddReminder extends Component {
         AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject));
       }
     }).done(() => {
-      alert("reminder added successfully");
-      this.props.navigation.state.params.handleOnNavigateBack();
-      this.props.navigation.goBack();
+      Alert.alert(
+        "Alert Title",
+        "reminder added successfully",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+          {
+            text: "OK",
+            onPress: () => {
+              this.props.navigation.state.params.handleOnNavigateBack();
+              this.props.navigation.goBack();
+            }
+          }
+        ],
+        { cancelable: false }
+      );
     });
   };
 

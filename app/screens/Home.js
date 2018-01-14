@@ -34,6 +34,7 @@ class Home extends Component {
           AsyncStorage.getItem(element)
             .then(JSON.parse)
             .then(response => {
+              console.log(response);
               this.setState({
                 data: this.state.data.filter(b => b.key !== element).concat({
                   key: element,

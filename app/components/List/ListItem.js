@@ -14,8 +14,6 @@ const ListItem = ({ renderData }) => (
         <View style={styles.listContainer}>
           <View style={styles.listLeft}>
             <Avatar medium rounded title={item.title.charAt(0)} />
-            
-
             <View style={styles.contentDetail}>
               <Text style={styles.textContent}>{item.title}</Text>
               <Text style={styles.textContent}>{item.date}</Text>

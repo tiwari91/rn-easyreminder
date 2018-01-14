@@ -124,13 +124,14 @@ class AddReminder extends Component {
     console.log("delete reminder");
   };
 
-  saveReminder = async () => {
+  saveReminder = () => {
     let reminderObject = {
       inputText: this.state.text,
       notify: this.state.notify,
       date: this.state.dateText,
       time: this.state.timeText,
-      repeatInterval: this.state.repeatInterval
+      repeatInterval: this.state.repeatInterval,
+      selectRepeatType: this.state.selectRepeatType
     };
 
     const CURRENT_KEY =
@@ -153,7 +154,7 @@ class AddReminder extends Component {
       }
     }).done(() => {
       Alert.alert(
-        "Alert Title",
+        "Reminder saving",
         "reminder added successfully",
         [
           {
@@ -183,15 +184,8 @@ class AddReminder extends Component {
   _handleSetInterval = text => {
     this.setState({
       repeatInterval: text
+      //open: false
     });
-  };
-
-  _handleSelectRepeatType = text => {
-    console.log("_handleSelectRepeatType", text);
-
-    // this.setState({
-    //   selectRepeatType: text
-    // });
   };
 
   render() {
@@ -261,10 +255,7 @@ class AddReminder extends Component {
           <View style={styles.repeatRow}>
             <View style={{ flexDirection: "row" }}>
               <Icon color="white" size={26} name="ios-repeat" />
-              <View
-                style={{ marginLeft: 45 }}
-                pointerEvents={this.state.switchValue === true ? null : "none"}
-              >
+              <View style={{ marginLeft: 45 }}>
                 <Text style={{ fontSize: 15, color: "white" }}>Repeat</Text>
                 <Text style={{ fontSize: 15, color: "white" }}>
                   Every {this.state.repeatInterval}{" "}
@@ -281,7 +272,10 @@ class AddReminder extends Component {
             />
           </View>
 
-          <View style={styles.dateTimePickerRow}>
+          <View
+            pointerEvents={this.state.switchValue === true ? null : "none"}
+            style={styles.dateTimePickerRow}
+          >
             <TouchableOpacity onPress={() => this.setState({ open: true })}>
               <ChevronIcon color="white" size={20} name="chevron-up" />
               <ChevronIcon color="white" size={20} name="chevron-down" />
@@ -299,7 +293,9 @@ class AddReminder extends Component {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.dateTimePickerRow}>
+          <View
+            pointerEvents={this.state.switchValue === true ? null : "none"}
+            style={styles.dateTimePickerRow}>
             <TouchableOpacity
               onPress={() => this.setState({ repeatType: true })}
             >
@@ -342,13 +338,15 @@ class AddReminder extends Component {
         <Modal
           open={this.state.open}
           modalDidClose={() => this.setState({ open: false })}
-          modalStyle={{
-            backgroundColor: "#374046"
-          }}
+          modalStyle={{ backgroundColor: "#374046" }}
         >
           <View>
             <TextInput
-              style={styles.inputText}
+              style={{
+                padding: 10,
+                fontSize: 20,
+                color: "white"
+              }}
               placeholder="Enter your text"
               onChangeText={this._handleSetInterval}
               keyboardType="numeric"
@@ -358,10 +356,6 @@ class AddReminder extends Component {
               autoCapitalize="none"
               underlineColorAndroid="transparent"
             />
-
-            <TouchableOpacity onPress={() => this.setState({ open: false })}>
-              <Text>Close</Text>
-            </TouchableOpacity>
           </View>
         </Modal>
 
@@ -379,24 +373,59 @@ class AddReminder extends Component {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={this._handleSelectRepeatType("Minute")}>
-              <Text style={styles.repeatType}>Minute</Text>
+            <TouchableOpacity
+              onPress={() =>
+                this.setState({
+                  selectRepeatType: "Minute",
+                  repeatType: false
+                })
+              }
+            >
+              <Text style={styles.repeatTypeInterval}>Minute</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={this._handleSelectRepeatType("Hour")}>
-              <Text style={styles.repeatType}>Hour</Text>
+            <TouchableOpacity
+              onPress={() =>
+                this.setState({
+                  selectRepeatType: "Hour",
+                  repeatType: false
+                })
+              }
+            >
+              <Text style={styles.repeatTypeInterval}>Hour</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={this._handleSelectRepeatType("Day")}>
-              <Text style={styles.repeatType}>Day</Text>
+            <TouchableOpacity
+              onPress={() =>
+                this.setState({
+                  selectRepeatType: "Day",
+                  repeatType: false
+                })
+              }
+            >
+              <Text style={styles.repeatTypeInterval}>Day </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={this._handleSelectRepeatType("Week")}>
-              <Text style={styles.repeatType}>Week</Text>
+            <TouchableOpacity
+              onPress={() =>
+                this.setState({
+                  selectRepeatType: "Week",
+                  repeatType: false
+                })
+              }
+            >
+              <Text style={styles.repeatTypeInterval}>Week </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={this._handleSelectRepeatType("Month")}>
-              <Text style={styles.repeatType}>Month</Text>
+            <TouchableOpacity
+              onPress={() =>
+                this.setState({
+                  selectRepeatType: "Month",
+                  repeatType: false
+                })
+              }
+            >
+              <Text style={styles.repeatTypeInterval}>Month </Text>
             </TouchableOpacity>
           </View>
         </Modal>
@@ -419,7 +448,7 @@ const styles = StyleSheet.create({
     padding: 10
   },
 
-  repeatType: {
+  repeatTypeInterval: {
     color: "white",
     fontSize: 15,
     paddingHorizontal: 10,

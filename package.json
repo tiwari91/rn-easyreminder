@@ -35,6 +35,7 @@
     "react-native-datepicker": "^1.6.0",
     "react-native-elements": "^0.18.5",
     "react-native-extended-stylesheet": "^0.8.0",
+    "react-native-keyboard-spacer": "^0.4.1",
     "react-native-material-dropdown": "^0.6.1",
     "react-native-modal": "^4.1.1",
     "react-native-modal-datetime-picker": "^4.13.0",

@@ -12,9 +12,12 @@ import {
   Dimensions,
   Button,
   Alert,
-  TouchableHighlight
+  TouchableHighlight,
+  TouchableWithoutFeedback
 } from "react-native";
-//import DateTimePicker from "react-native-modal-datetime-picker";
+import DismissKeyboard from "dismissKeyboard";
+import KeyboardSpacer from "react-native-keyboard-spacer";
+
 import Modal from "react-native-simple-modal";
 
 import Icon from "react-native-vector-icons/Ionicons";
@@ -26,7 +29,6 @@ import ActionButton from "react-native-action-button";
 import Moment from "moment";
 import MomentTZ from "moment-timezone";
 
-import { Dropdown } from "react-native-material-dropdown";
 import { AsyncStorage } from "react-native";
 import { InputWithButton } from "../components/TextInput";
 import DatePicker from "../components/DateTimePicker/index";
@@ -198,212 +200,223 @@ class AddReminder extends Component {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.topView}>
-          <InputWithButton
-            maxLength={40}
-            onChangeText={this._handleInputText}
-          />
+      <TouchableWithoutFeedback
+        onPress={() => {
+          DismissKeyboard();
+        }}
+      >
+        <SafeAreaView style={styles.container}>
+          <View style={styles.topView}>
+            <InputWithButton
+              maxLength={40}
+              onChangeText={this._handleInputText}
+            />
+            <ActionButton
+              buttonColor="#65799b"
+              onPress={this._handleNotification}
+              offsetY={0}
+              icon={
+                this.state.notify === false ? (
+                  <NotifyIcon
+                    color="white"
+                    size={20}
+                    name="notifications-off"
+                  />
+                ) : (
+                  <NotifyIcon color="white" size={20} name="notifications" />
+                )
+              }
+            />
+          </View>
 
-          <ActionButton
-            buttonColor="#65799b"
-            onPress={this._handleNotification}
-            offsetY={0}
-            icon={
-              this.state.notify === false ? (
-                <NotifyIcon color="white" size={20} name="notifications-off" />
-              ) : (
-                <NotifyIcon color="white" size={20} name="notifications" />
-              )
-            }
-          />
-        </View>
+          <View style={styles.bottomView}>
+            <DateTimeView
+              dateTimeCheck={true}
+              onPress={this._showDatePicker}
+              IconName="ios-calendar-outline"
+              dateText={this.state.dateText}
+              name="Date"
+            />
 
-        <View style={styles.bottomView}>
-          <DateTimeView
-            dateTimeCheck={true}
-            onPress={this._showDatePicker}
-            IconName="ios-calendar-outline"
-            dateText={this.state.dateText}
-            name="Date"
-          />
+            <DateTimeView
+              dateTimeCheck={false}
+              onPress={this._showTimePicker}
+              IconName="ios-time-outline"
+              dateText={this.state.timeText}
+              name="Time"
+            />
 
-          <DateTimeView
-            dateTimeCheck={false}
-            onPress={this._showTimePicker}
-            IconName="ios-time-outline"
-            dateText={this.state.timeText}
-            name="Time"
-          />
-
-          <View style={styles.repeatRow}>
-            <View style={{ flexDirection: "row" }}>
-              <Icon color="white" size={26} name="ios-repeat" />
-              <View style={{ marginLeft: 45 }}>
-                <Text style={{ fontSize: 15, color: "white" }}>Repeat</Text>
-                <Text style={{ fontSize: 15, color: "white" }}>
-                  Every {this.state.repeatInterval}{" "}
-                  {this.state.selectRepeatType}(s)
-                </Text>
+            <View style={styles.repeatRow}>
+              <View style={{ flexDirection: "row" }}>
+                <Icon color="white" size={26} name="ios-repeat" />
+                <View style={{ marginLeft: 45 }}>
+                  <Text style={{ fontSize: 15, color: "white" }}>Repeat</Text>
+                  <Text style={{ fontSize: 15, color: "white" }}>
+                    {this.state.switchValue === true ? `Every ${this.state.repeatInterval} ${this.state.selectRepeatType}(s)` : "No Repeat"}
+                    
+                  </Text>
+                </View>
               </View>
+
+              <Switch
+                value={this.state.switchValue}
+                disabled={false}
+                onValueChange={this._handleToggleSwitch}
+                tintColor="#ff0000"
+              />
             </View>
 
-            <Switch
-              value={this.state.switchValue}
-              disabled={false}
-              onValueChange={this._handleToggleSwitch}
-              tintColor="#ff0000"
+            <View
+              pointerEvents={this.state.switchValue === true ? null : "none"}
+              style={styles.dateTimePickerRow}
+            >
+              <TouchableOpacity onPress={() => this.setState({ open: true })}>
+                <ChevronIcon color="white" size={20} name="chevron-up" />
+                <ChevronIcon color="white" size={20} name="chevron-down" />
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => this.setState({ open: true })}>
+                <View style={styles.dateContent}>
+                  <Text style={{ fontSize: 15, color: "white" }}>
+                    Repetition Interval
+                  </Text>
+                  <Text style={{ fontSize: 15, color: "white" }}>
+                    {this.state.repeatInterval}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              pointerEvents={this.state.switchValue === true ? null : "none"}
+              style={styles.dateTimePickerRow}
+            >
+              <TouchableOpacity
+                onPress={() => this.setState({ repeatType: true })}
+              >
+                <NavIcon
+                  color="white"
+                  size={20}
+                  name="format-list-bulleted-type"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.setState({ repeatType: true })}
+              >
+                <View style={styles.dateContent}>
+                  <Text style={{ fontSize: 15, color: "white" }}>
+                    Types of Repeats
+                  </Text>
+                  <Text style={{ fontSize: 15, color: "white" }}>
+                    {this.state.selectRepeatType}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <DatePicker
+              isVisible={this.state.isDatePickerVisible}
+              onConfirm={this._handleDatePicked}
+              onCancel={this._hideDatePicker}
+              mode="date"
+              minimumDate={new Date(this.state.todayDate)}
+            />
+
+            <DatePicker
+              isVisible={this.state.isTimePickerVisible}
+              onConfirm={this._handleTimePicked}
+              onCancel={this._hideTimePicker}
+              mode="time"
             />
           </View>
 
-          <View
-            pointerEvents={this.state.switchValue === true ? null : "none"}
-            style={styles.dateTimePickerRow}
-          >
-            <TouchableOpacity onPress={() => this.setState({ open: true })}>
-              <ChevronIcon color="white" size={20} name="chevron-up" />
-              <ChevronIcon color="white" size={20} name="chevron-down" />
-            </TouchableOpacity>
+          <KeyboardSpacer />
 
-            <TouchableOpacity onPress={() => this.setState({ open: true })}>
-              <View style={styles.dateContent}>
-                <Text style={{ fontSize: 15, color: "white" }}>
-                  Repetition Interval
-                </Text>
-                <Text style={{ fontSize: 15, color: "white" }}>
-                  {this.state.repeatInterval}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-
-          <View
-            pointerEvents={this.state.switchValue === true ? null : "none"}
-            style={styles.dateTimePickerRow}
+          <Modal
+            open={this.state.open}
+            modalDidClose={() => this.setState({ open: false })}
+            modalStyle={{ backgroundColor: "#374046" }}
           >
-            <TouchableOpacity
-              onPress={() => this.setState({ repeatType: true })}
-            >
-              <NavIcon
-                color="white"
-                size={20}
-                name="format-list-bulleted-type"
+            <View>
+              <InputWithButton
+                maxLength={10}
+                onChangeText={this._handleSetInterval}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.setState({ repeatType: true })}
-            >
-              <View style={styles.dateContent}>
-                <Text style={{ fontSize: 15, color: "white" }}>
-                  Types of Repeats
+            </View>
+          </Modal>
+
+          <Modal
+            open={this.state.repeatType}
+            modalDidClose={() => this.setState({ repeatType: false })}
+            modalStyle={{
+              backgroundColor: "#374046"
+            }}
+          >
+            <View>
+              <TouchableOpacity onPress={() => null}>
+                <Text style={styles.repeatTypeSelect}>
+                  Select Repetition Type
                 </Text>
-                <Text style={{ fontSize: 15, color: "white" }}>
-                  {this.state.selectRepeatType}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+              </TouchableOpacity>
 
-          <DatePicker
-            isVisible={this.state.isDatePickerVisible}
-            onConfirm={this._handleDatePicked}
-            onCancel={this._hideDatePicker}
-            mode="date"
-            minimumDate={new Date(this.state.todayDate)}
-          />
+              <TouchableOpacity
+                onPress={() =>
+                  this.setState({
+                    selectRepeatType: "Minute",
+                    repeatType: false
+                  })
+                }
+              >
+                <Text style={styles.repeatTypeInterval}>Minute</Text>
+              </TouchableOpacity>
 
-          <DatePicker
-            isVisible={this.state.isTimePickerVisible}
-            onConfirm={this._handleTimePicked}
-            onCancel={this._hideTimePicker}
-            mode="time"
-          />
-        </View>
+              <TouchableOpacity
+                onPress={() =>
+                  this.setState({
+                    selectRepeatType: "Hour",
+                    repeatType: false
+                  })
+                }
+              >
+                <Text style={styles.repeatTypeInterval}>Hour</Text>
+              </TouchableOpacity>
 
-        <Modal
-          open={this.state.open}
-          modalDidClose={() => this.setState({ open: false })}
-          modalStyle={{ backgroundColor: "#374046" }}
-        >
-          <View>
-            <InputWithButton
-              maxLength={10}
-              onChangeText={this._handleSetInterval}
-            />
-          </View>
-        </Modal>
+              <TouchableOpacity
+                onPress={() =>
+                  this.setState({
+                    selectRepeatType: "Day",
+                    repeatType: false
+                  })
+                }
+              >
+                <Text style={styles.repeatTypeInterval}>Day </Text>
+              </TouchableOpacity>
 
-        <Modal
-          open={this.state.repeatType}
-          modalDidClose={() => this.setState({ repeatType: false })}
-          modalStyle={{
-            backgroundColor: "#374046"
-          }}
-        >
-          <View>
-            <TouchableOpacity onPress={() => null}>
-              <Text style={styles.repeatTypeSelect}>
-                Select Repetition Type
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  this.setState({
+                    selectRepeatType: "Week",
+                    repeatType: false
+                  })
+                }
+              >
+                <Text style={styles.repeatTypeInterval}>Week </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() =>
-                this.setState({
-                  selectRepeatType: "Minute",
-                  repeatType: false
-                })
-              }
-            >
-              <Text style={styles.repeatTypeInterval}>Minute</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() =>
-                this.setState({
-                  selectRepeatType: "Hour",
-                  repeatType: false
-                })
-              }
-            >
-              <Text style={styles.repeatTypeInterval}>Hour</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() =>
-                this.setState({
-                  selectRepeatType: "Day",
-                  repeatType: false
-                })
-              }
-            >
-              <Text style={styles.repeatTypeInterval}>Day </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() =>
-                this.setState({
-                  selectRepeatType: "Week",
-                  repeatType: false
-                })
-              }
-            >
-              <Text style={styles.repeatTypeInterval}>Week </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() =>
-                this.setState({
-                  selectRepeatType: "Month",
-                  repeatType: false
-                })
-              }
-            >
-              <Text style={styles.repeatTypeInterval}>Month </Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
-      </SafeAreaView>
+              <TouchableOpacity
+                onPress={() =>
+                  this.setState({
+                    selectRepeatType: "Month",
+                    repeatType: false
+                  })
+                }
+              >
+                <Text style={styles.repeatTypeInterval}>Month </Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     );
   }
 }

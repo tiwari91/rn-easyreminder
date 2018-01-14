@@ -38,6 +38,7 @@ const REMINDER_KEY = "reminderKey";
 const REMINDER_KEY_OBJ = "reminderKeyObj";
 
 class AddReminder extends Component {
+  
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
@@ -66,30 +67,34 @@ class AddReminder extends Component {
     };
   };
 
-  state = {
-    text: " ",
-    dateText: MomentTZ()
-      .tz("America/Los_Angeles")
-      .format("LL"),
-    timeText: MomentTZ()
-      .tz("America/Los_Angeles")
-      .format("hh:mm A"),
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      text: " ",
+      dateText: MomentTZ()
+        .tz("America/Los_Angeles")
+        .format("LL"),
+      timeText: MomentTZ()
+        .tz("America/Los_Angeles")
+        .format("hh:mm A"),
 
-    todayDate: MomentTZ()
-      .tz("America/Los_Angeles")
-      .format("LL"),
-    isDatePickerVisible: false,
-    isTimePickerVisible: false,
+      todayDate: MomentTZ()
+        .tz("America/Los_Angeles")
+        .format("LL"),
+      isDatePickerVisible: false,
+      isTimePickerVisible: false,
 
-    switchValue: true,
-    notify: false,
+      switchValue: true,
+      notify: false,
 
-    repeatInterval: 0,
-    open: false,
-    repeatType: false,
+      repeatInterval: 0,
+      open: false,
+      repeatType: false,
 
-    selectRepeatType: "Minute"
-  };
+      selectRepeatType: "Minute"
+    };
+  }
 
   componentDidMount() {
     this.props.navigation.setParams({
@@ -158,8 +163,8 @@ class AddReminder extends Component {
       }
     }).done(() => {
       Alert.alert(
-        "Reminder saving",
-        "reminder added successfully",
+        "Saved",
+        "Reminder added successfully",
         [
           {
             text: "Cancel",
@@ -197,6 +202,7 @@ class AddReminder extends Component {
       text
     });
   };
+
 
   render() {
     return (
@@ -252,8 +258,11 @@ class AddReminder extends Component {
                 <View style={{ marginLeft: 45 }}>
                   <Text style={{ fontSize: 15, color: "white" }}>Repeat</Text>
                   <Text style={{ fontSize: 15, color: "white" }}>
-                    {this.state.switchValue === true ? `Every ${this.state.repeatInterval} ${this.state.selectRepeatType}(s)` : "No Repeat"}
-                    
+                    {this.state.switchValue === true
+                      ? `Every ${this.state.repeatInterval} ${
+                          this.state.selectRepeatType
+                        }(s)`
+                      : "No Repeat"}
                   </Text>
                 </View>
               </View>
@@ -268,8 +277,7 @@ class AddReminder extends Component {
 
             <View
               pointerEvents={this.state.switchValue === true ? null : "none"}
-              style={styles.dateTimePickerRow}
-            >
+              style={styles.dateTimePickerRow}>
               <TouchableOpacity onPress={() => this.setState({ open: true })}>
                 <ChevronIcon color="white" size={20} name="chevron-up" />
                 <ChevronIcon color="white" size={20} name="chevron-down" />
@@ -289,20 +297,18 @@ class AddReminder extends Component {
 
             <View
               pointerEvents={this.state.switchValue === true ? null : "none"}
-              style={styles.dateTimePickerRow}
-            >
+              style={styles.dateTimePickerRow}>
               <TouchableOpacity
-                onPress={() => this.setState({ repeatType: true })}
-              >
+                onPress={() => this.setState({ repeatType: true })}>
                 <NavIcon
                   color="white"
                   size={20}
                   name="format-list-bulleted-type"
                 />
               </TouchableOpacity>
+
               <TouchableOpacity
-                onPress={() => this.setState({ repeatType: true })}
-              >
+                onPress={() => this.setState({ repeatType: true })}>
                 <View style={styles.dateContent}>
                   <Text style={{ fontSize: 15, color: "white" }}>
                     Types of Repeats
@@ -335,8 +341,7 @@ class AddReminder extends Component {
           <Modal
             open={this.state.open}
             modalDidClose={() => this.setState({ open: false })}
-            modalStyle={{ backgroundColor: "#374046" }}
-          >
+            modalStyle={{ backgroundColor: "#374046" }}>
             <View>
               <InputWithButton
                 maxLength={10}
@@ -350,8 +355,7 @@ class AddReminder extends Component {
             modalDidClose={() => this.setState({ repeatType: false })}
             modalStyle={{
               backgroundColor: "#374046"
-            }}
-          >
+            }}>
             <View>
               <TouchableOpacity onPress={() => null}>
                 <Text style={styles.repeatTypeSelect}>
@@ -415,6 +419,7 @@ class AddReminder extends Component {
               </TouchableOpacity>
             </View>
           </Modal>
+
         </SafeAreaView>
       </TouchableWithoutFeedback>
     );

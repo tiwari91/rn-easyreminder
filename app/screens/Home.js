@@ -34,7 +34,7 @@ class Home extends Component {
           AsyncStorage.getItem(element)
             .then(JSON.parse)
             .then(response => {
-              console.log(response);
+              //console.log(response);
               this.setState({
                 data: this.state.data.filter(b => b.key !== element).concat({
                   key: element,
@@ -59,12 +59,15 @@ class Home extends Component {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "#374046" }}>
         <StatusBar barStyle="light-content" />
-          <Header />
-          {this.state.data.length > 0 ? (
-            <ListItem renderData={this.state.data} />
-          ) : (
-            <Info InfoText="Press on plus button to create reminders" />
-          )}
+        <Header />
+        {this.state.data.length > 0 ? (
+          <ListItem
+            renderData={this.state.data}
+            navigation={this.props.navigation}
+          />
+        ) : (
+          <Info InfoText="Press on plus button to create reminders" />
+        )}
         <ActionButton
           buttonColor="rgba(231,76,60,1)"
           onPress={() =>

@@ -1,0 +1,39 @@
+import React from 'react';
+import { TextInput } from 'react-native';
+import PropTypes from 'prop-types';
+import styles from './styles';
+
+const InputWithButton = (props) => {
+  const baseStyle = [styles.baseStyle];
+  if (props.maxLength === 40) {
+    baseStyle.push({
+      fontSize: 30,
+      borderBottomWidth: 1,
+      marginHorizontal: 20,
+      marginBottom: 80,
+    });
+  } else {
+    baseStyle.push({ fontSize: 20 });
+  }
+
+  return (
+    <TextInput
+      style={baseStyle}
+      placeholder="Enter your text"
+      onChangeText={props.onChangeText}
+      multiline
+      maxLength={props.maxLength}
+      placeholderTextColor="white"
+      autoCorrect={false}
+      autoCapitalize="none"
+      underlineColorAndroid="transparent"
+    />
+  );
+};
+
+InputWithButton.propTypes = {
+  onChangeText: PropTypes.func,
+  maxLength: PropTypes.number,
+};
+
+export default InputWithButton;

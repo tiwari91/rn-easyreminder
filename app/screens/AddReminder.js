@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {
   View,
-  TextInput,
   Text,
   SafeAreaView,
   StyleSheet,
@@ -15,7 +14,7 @@ import {
   Alert,
   TouchableHighlight
 } from "react-native";
-import DateTimePicker from "react-native-modal-datetime-picker";
+//import DateTimePicker from "react-native-modal-datetime-picker";
 import Modal from "react-native-simple-modal";
 
 import Icon from "react-native-vector-icons/Ionicons";
@@ -29,6 +28,9 @@ import MomentTZ from "moment-timezone";
 
 import { Dropdown } from "react-native-material-dropdown";
 import { AsyncStorage } from "react-native";
+import { InputWithButton } from "../components/TextInput";
+import DatePicker from "../components/DateTimePicker/index";
+import DateTimeView from "../components/DateTimeView/index";
 
 const REMINDER_KEY = "reminderKey";
 const REMINDER_KEY_OBJ = "reminderKeyObj";
@@ -188,21 +190,21 @@ class AddReminder extends Component {
     });
   };
 
+  _handleInputText = text => {
+    this.setState({
+      text
+    });
+  };
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.topView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Enter your text"
-            onChangeText={text => this.setState({ text })}
-            multiline={true}
+          <InputWithButton
             maxLength={40}
-            placeholderTextColor="white"
-            autoCorrect={false}
-            autoCapitalize="none"
-            underlineColorAndroid="transparent"
+            onChangeText={this._handleInputText}
           />
+
           <ActionButton
             buttonColor="#65799b"
             onPress={this._handleNotification}
@@ -218,39 +220,21 @@ class AddReminder extends Component {
         </View>
 
         <View style={styles.bottomView}>
-          <TouchableOpacity
-            style={styles.dateTimePickerRow}
+          <DateTimeView
+            dateTimeCheck={true}
             onPress={this._showDatePicker}
-          >
-            <Icon color="white" size={26} name="ios-calendar-outline" />
-            <View style={styles.dateContent}>
-              <Text style={{ fontSize: 15, color: "white" }}>Date</Text>
-              <Text style={{ fontSize: 15, color: "white" }}>
-                {this.state.dateText
-                  ? this.state.dateText
-                  : MomentTZ()
-                      .tz("America/Los_Angeles")
-                      .format("LL")}
-              </Text>
-            </View>
-          </TouchableOpacity>
+            IconName="ios-calendar-outline"
+            dateText={this.state.dateText}
+            name="Date"
+          />
 
-          <TouchableOpacity
-            style={styles.dateTimePickerRow}
+          <DateTimeView
+            dateTimeCheck={false}
             onPress={this._showTimePicker}
-          >
-            <Icon color="white" size={26} name="ios-time-outline" />
-            <View style={styles.dateContent}>
-              <Text style={{ fontSize: 15, color: "white" }}>Time</Text>
-              <Text style={{ fontSize: 15, color: "white" }}>
-                {this.state.timeText
-                  ? this.state.timeText
-                  : MomentTZ()
-                      .tz("America/Los_Angeles")
-                      .format("hh:mm A")}
-              </Text>
-            </View>
-          </TouchableOpacity>
+            IconName="ios-time-outline"
+            dateText={this.state.timeText}
+            name="Time"
+          />
 
           <View style={styles.repeatRow}>
             <View style={{ flexDirection: "row" }}>
@@ -295,7 +279,8 @@ class AddReminder extends Component {
 
           <View
             pointerEvents={this.state.switchValue === true ? null : "none"}
-            style={styles.dateTimePickerRow}>
+            style={styles.dateTimePickerRow}
+          >
             <TouchableOpacity
               onPress={() => this.setState({ repeatType: true })}
             >
@@ -319,7 +304,7 @@ class AddReminder extends Component {
             </TouchableOpacity>
           </View>
 
-          <DateTimePicker
+          <DatePicker
             isVisible={this.state.isDatePickerVisible}
             onConfirm={this._handleDatePicked}
             onCancel={this._hideDatePicker}
@@ -327,7 +312,7 @@ class AddReminder extends Component {
             minimumDate={new Date(this.state.todayDate)}
           />
 
-          <DateTimePicker
+          <DatePicker
             isVisible={this.state.isTimePickerVisible}
             onConfirm={this._handleTimePicked}
             onCancel={this._hideTimePicker}
@@ -341,20 +326,9 @@ class AddReminder extends Component {
           modalStyle={{ backgroundColor: "#374046" }}
         >
           <View>
-            <TextInput
-              style={{
-                padding: 10,
-                fontSize: 20,
-                color: "white"
-              }}
-              placeholder="Enter your text"
-              onChangeText={this._handleSetInterval}
-              keyboardType="numeric"
+            <InputWithButton
               maxLength={10}
-              placeholderTextColor="white"
-              autoCorrect={false}
-              autoCapitalize="none"
-              underlineColorAndroid="transparent"
+              onChangeText={this._handleSetInterval}
             />
           </View>
         </Modal>
@@ -465,17 +439,6 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: "space-around"
     //marginTop: 50
-  },
-
-  inputText: {
-    //marginTop: 170,
-    padding: 10,
-    fontSize: 30,
-    color: "white",
-    borderBottomWidth: 1,
-    //backgroundColor: "red",
-    marginHorizontal: 20,
-    marginBottom: 80
   },
 
   dateTimePickerRow: {

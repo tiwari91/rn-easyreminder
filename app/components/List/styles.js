@@ -1,11 +1,13 @@
 import { StyleSheet } from 'react-native';
 
+const newLocal = '#5D6874';
+
 const styles = StyleSheet.create({
   listContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 15,
-    backgroundColor: '#5D6874',
+    backgroundColor: newLocal,
   },
 
   listLeft: {

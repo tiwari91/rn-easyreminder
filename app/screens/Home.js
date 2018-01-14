@@ -59,14 +59,12 @@ class Home extends Component {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "#374046" }}>
         <StatusBar barStyle="light-content" />
-        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={10}>
           <Header />
           {this.state.data.length > 0 ? (
             <ListItem renderData={this.state.data} />
           ) : (
             <Info InfoText="Press on plus button to create reminders" />
           )}
-        </KeyboardAvoidingView>
         <ActionButton
           buttonColor="rgba(231,76,60,1)"
           onPress={() =>

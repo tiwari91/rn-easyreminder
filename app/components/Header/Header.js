@@ -6,7 +6,16 @@ import styles from './styles';
 
 const Header = () => (
   <View style={styles.navbar}>
-    <Text style={{ color: 'white', fontSize: 18 }}>Reminder</Text>
+    <Text
+      style={{
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        fontFamily: 'Arial',
+      }}
+    >
+      Reminder
+    </Text>
     {/* <TouchableOpacity>
       <Icon size={26} name="md-more" color="#ffffff" />
     </TouchableOpacity> */}

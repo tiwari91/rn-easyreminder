@@ -84,7 +84,7 @@ class AddReminder extends Component {
     open: false,
     repeatType: false,
 
-    dropDownRepeat: ""
+    selectRepeatType: "Minute"
   };
 
   componentDidMount() {
@@ -186,6 +186,14 @@ class AddReminder extends Component {
     });
   };
 
+  _handleSelectRepeatType = text => {
+    console.log("_handleSelectRepeatType", text);
+
+    // this.setState({
+    //   selectRepeatType: text
+    // });
+  };
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
@@ -259,7 +267,8 @@ class AddReminder extends Component {
               >
                 <Text style={{ fontSize: 15, color: "white" }}>Repeat</Text>
                 <Text style={{ fontSize: 15, color: "white" }}>
-                  Every {this.state.repeatInterval}
+                  Every {this.state.repeatInterval}{" "}
+                  {this.state.selectRepeatType}(s)
                 </Text>
               </View>
             </View>
@@ -308,7 +317,7 @@ class AddReminder extends Component {
                   Types of Repeats
                 </Text>
                 <Text style={{ fontSize: 15, color: "white" }}>
-                  {this.state.dropDownRepeat}
+                  {this.state.selectRepeatType}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -332,7 +341,6 @@ class AddReminder extends Component {
 
         <Modal
           open={this.state.open}
-          modalDidOpen={this.toggleRepeatInterval}
           modalDidClose={() => this.setState({ open: false })}
           modalStyle={{
             backgroundColor: "#374046"
@@ -365,34 +373,30 @@ class AddReminder extends Component {
           }}
         >
           <View>
-            <TouchableOpacity>
-              <Text style={styles.repeatTypeSelect}>Select</Text>
+            <TouchableOpacity onPress={() => null}>
+              <Text style={styles.repeatTypeSelect}>
+                Select Repetition Type
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={this._handleSelectRepeatType("Minute")}>
               <Text style={styles.repeatType}>Minute</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={this._handleSelectRepeatType("Hour")}>
               <Text style={styles.repeatType}>Hour</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={this._handleSelectRepeatType("Day")}>
               <Text style={styles.repeatType}>Day</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={this._handleSelectRepeatType("Week")}>
               <Text style={styles.repeatType}>Week</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={this._handleSelectRepeatType("Month")}>
               <Text style={styles.repeatType}>Month</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => this.setState({ repeatType: false })}
-            >
-              <Text>Close</Text>
             </TouchableOpacity>
           </View>
         </Modal>

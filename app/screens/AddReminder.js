@@ -86,7 +86,7 @@ class AddReminder extends Component {
       switchValue: true,
       notify: false,
 
-      repeatInterval: 0,
+      repeatInterval: '0',
       open: false,
       repeatType: false,
 
@@ -294,6 +294,7 @@ class AddReminder extends Component {
             />
 
             <RepeatInterval
+              pointerEvents={this.state.switchValue === true ? null : "none"}
               switchValue={this.state.switchValue}
               repeatInterval={this.state.repeatInterval}
               onPress={() => this.setState({ open: true })}
@@ -301,6 +302,7 @@ class AddReminder extends Component {
             />
 
             <RepeatInterval
+              pointerEvents={this.state.switchValue === true ? null : "none"}
               switchValue={this.state.switchValue}
               repeatInterval={this.state.repeatInterval}
               selectRepeatType={this.state.selectRepeatType}

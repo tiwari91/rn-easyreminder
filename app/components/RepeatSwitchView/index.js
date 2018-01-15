@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, View, Switch } from 'react-native';
+import { PropTypes } from 'prop-types';
 import Icon from 'react-native-vector-icons/Ionicons';
-
-import styles from './styles'
+import styles from './styles';
 
 const RepeatSwitchView = props => (
   <View style={styles.repeatRow}>
@@ -26,5 +26,12 @@ const RepeatSwitchView = props => (
     />
   </View>
 );
+
+RepeatSwitchView.propTypes = {
+  repeatInterval: PropTypes.string,
+  onValueChange: PropTypes.func,
+  selectRepeatType: PropTypes.string,
+  value: PropTypes.bool,
+};
 
 export default RepeatSwitchView;

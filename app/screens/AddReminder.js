@@ -182,7 +182,13 @@ class AddReminder extends Component {
       selectRepeatType: this.state.selectRepeatType
     };
 
-    const CURRENT_KEY = Math.round(new Date().getTime() / 1000).toString();
+    let CURRENT_KEY;
+
+    if (this.state.reminderKey !== "") {
+      CURRENT_KEY = this.state.reminderKey;
+    }else{
+      CURRENT_KEY = Math.round(new Date().getTime() / 1000).toString();
+    }
 
     AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject)).done(
       () => {

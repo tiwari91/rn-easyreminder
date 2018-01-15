@@ -1,26 +1,32 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   FlatList,
   Text,
   TouchableOpacity,
-  TouchableHighlight,
-} from 'react-native';
-import { List, Avatar } from 'react-native-elements';
+  TouchableHighlight
+} from "react-native";
+import { List, Avatar } from "react-native-elements";
 
-import PropTypes from 'prop-types';
-import NotifyIcon from 'react-native-vector-icons/MaterialIcons';
-import styles from './styles';
+import PropTypes from "prop-types";
+import NotifyIcon from "react-native-vector-icons/MaterialIcons";
+import styles from "./styles";
 
-const ListItem = ({ renderData, navigation, handleOnGetData }) => {
+const ListItem = ({
+  renderData,
+  navigation,
+  handleOnGetData,
+  handleOnNavigateBack
+}) => {
   renderSeparator = () => (
-    <View style={{ height: 0.5, backgroundColor: '#E5E5E5' }} />
+    <View style={{ height: 0.5, backgroundColor: "#E5E5E5" }} />
   );
 
-  goToNextScreen = (item) => {
-    navigation.navigate('AddReminder', {
+  goToNextScreen = item => {
+    navigation.navigate("AddReminder", {
       item,
       handleOnGetData,
+      handleOnNavigateBack
     });
   };
 
@@ -66,7 +72,7 @@ const ListItem = ({ renderData, navigation, handleOnGetData }) => {
 };
 
 ListItem.propTypes = {
-  renderData: PropTypes.array.isRequired,
+  renderData: PropTypes.array.isRequired
 };
 
 export default ListItem;

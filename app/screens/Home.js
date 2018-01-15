@@ -57,8 +57,7 @@ class Home extends Component {
         data: prevState.data.filter(b => {
           return keys.includes(b.key);
         })
-      }))
-
+      }));
     });
   };
 
@@ -72,6 +71,7 @@ class Home extends Component {
             renderData={this.state.data}
             navigation={this.props.navigation}
             handleOnGetData={this.handleOnGetData}
+            handleOnNavigateBack={this.handleOnNavigateBack}
           />
         ) : (
           <Info InfoText="Press on plus button to create reminders" />

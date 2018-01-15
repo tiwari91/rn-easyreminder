@@ -53,19 +53,13 @@ class Home extends Component {
 
   handleOnGetData = () => {
     AsyncStorage.getAllKeys().then(keys => {
-      console.log(keys);
-      //keys.forEach(element => {
-      this.setState(state => {
-        //console.log(state.data.filter(b => b.key));
-        //state: state.date.filter(b => b.key === element);
-        let newState = state.data.filter(b => {
+      this.setState(prevState => ({
+        data: prevState.data.filter(b => {
           return keys.includes(b.key);
-        });
-        console.log(newState);
-        state: newState;
-      });
+        })
+      }))
+
     });
-    //});
   };
 
   render() {

@@ -39,12 +39,12 @@ class AddReminder extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     const headerTitle =
-      params.data !== undefined ? "Edit reminder" : "Create a reminder";
+      params.item !== undefined ? "Edit reminder" : "Create a reminder";
 
     return {
       headerRight: (
         <View style={{ flexDirection: "row" }}>
-          {params.data !== undefined ? (
+          {params.item !== undefined ? (
             <TouchableOpacity onPress={() => params.handleRemove()}>
               <NavIcon color="white" size={26} name="delete" />
             </TouchableOpacity>
@@ -96,21 +96,18 @@ class AddReminder extends Component {
   }
 
   componentDidMount() {
-    var data = this.props.navigation.state.params.data;
-
+    var data = this.props.navigation.state.params.item;
     if (data !== undefined) {
-      data.map(x => {
-        let timeTxt = x.date.split(" ");
-        this.setState({
-          reminderKey: x.key,
-          text: x.title,
-          dateText: timeTxt.slice(0, -2).join(" "),
-          timeText:
-            timeTxt[timeTxt.length - 2] + " " + timeTxt[timeTxt.length - 1],
-          notify: x.notify,
-          repeatInterval: x.duration.match(/\d/g).join(""),
-          selectRepeatType: x.duration.split(" ")[2]
-        });
+      let timeTxt = data.date.split(" ");
+      this.setState({
+        reminderKey: data.key,
+        text: data.title,
+        dateText: timeTxt.slice(0, -2).join(" "),
+        timeText:
+          timeTxt[timeTxt.length - 2] + " " + timeTxt[timeTxt.length - 1],
+        notify: data.notify,
+        repeatInterval: data.duration.match(/\d/g).join(""),
+        selectRepeatType: data.duration.split(" ")[2]
       });
     } else {
       this.setState({
@@ -192,7 +189,8 @@ class AddReminder extends Component {
         Alert.alert(
           "Saved",
           "Reminder added successfully",
-          [{
+          [
+            {
               text: "OK",
               onPress: () => {
                 this.props.navigation.state.params.handleOnNavigateBack();

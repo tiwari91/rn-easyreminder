@@ -19,7 +19,7 @@ const ListItem = ({ renderData, navigation, handleOnGetData }) => {
 
   goToNextScreen = (item) => {
     navigation.navigate('AddReminder', {
-      data: renderData,
+      item,
       handleOnGetData,
     });
   };

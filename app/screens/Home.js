@@ -71,7 +71,7 @@ class Home extends Component {
             renderData={this.state.data}
             navigation={this.props.navigation}
             handleOnGetData={this.handleOnGetData}
-            handleOnNavigateBack={this.handleOnNavigateBack}
+            handleOnNavigateBack={this.handleOnNavigateBack }
           />
         ) : (
           <Info InfoText="Press on plus button to create reminders" />

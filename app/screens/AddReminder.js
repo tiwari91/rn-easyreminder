@@ -19,7 +19,6 @@ import DismissKeyboard from "dismissKeyboard";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 
 import Modal from "react-native-simple-modal";
-
 import Icon from "react-native-vector-icons/Ionicons";
 import ChevronIcon from "react-native-vector-icons/EvilIcons";
 import NavIcon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -34,6 +33,8 @@ import { InputWithButton } from "../components/TextInput";
 
 import DatePicker from "../components/DateTimePicker/index";
 import DateTimeView from "../components/DateTimeView/index";
+
+import ModalButton from "../components/Modal/ModalButton";
 
 class AddReminder extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -162,7 +163,6 @@ class AddReminder extends Component {
   _handleSetInterval = text => {
     this.setState({
       repeatInterval: text
-      //open: false
     });
   };
 
@@ -186,7 +186,7 @@ class AddReminder extends Component {
 
     if (this.state.reminderKey !== "") {
       CURRENT_KEY = this.state.reminderKey;
-    }else{
+    } else {
       CURRENT_KEY = Math.round(new Date().getTime() / 1000).toString();
     }
 
@@ -214,7 +214,7 @@ class AddReminder extends Component {
     AsyncStorage.removeItem(this.state.reminderKey).done(() => {
       Alert.alert(
         "Delete",
-        "Reminder delete successfully",
+        "Reminder deleted successfully",
         [
           {
             text: "OK",
@@ -226,6 +226,14 @@ class AddReminder extends Component {
         ],
         { cancelable: false }
       );
+    });
+  };
+
+  _handleModalText = text => {
+    console.log("_handleModalText");
+    this.setState({
+      selectRepeatType: text,
+      repeatType: false
     });
   };
 
@@ -390,68 +398,30 @@ class AddReminder extends Component {
             }}
           >
             <View>
-              <TouchableOpacity onPress={() => null}>
-                <Text style={styles.repeatTypeSelect}>
-                  Select Repetition Type
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() =>
-                  this.setState({
-                    selectRepeatType: "Minute",
-                    repeatType: false
-                  })
-                }
-              >
-                <Text style={styles.repeatTypeInterval}>Minute</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() =>
-                  this.setState({
-                    selectRepeatType: "Hour",
-                    repeatType: false
-                  })
-                }
-              >
-                <Text style={styles.repeatTypeInterval}>Hour</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() =>
-                  this.setState({
-                    selectRepeatType: "Day",
-                    repeatType: false
-                  })
-                }
-              >
-                <Text style={styles.repeatTypeInterval}>Day </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() =>
-                  this.setState({
-                    selectRepeatType: "Week",
-                    repeatType: false
-                  })
-                }
-              >
-                <Text style={styles.repeatTypeInterval}>Week </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() =>
-                  this.setState({
-                    selectRepeatType: "Month",
-                    repeatType: false
-                  })
-                }
-              >
-                <Text style={styles.repeatTypeInterval}>Month </Text>
-              </TouchableOpacity>
+              <ModalButton onPress={() => null} text="Select Repetition Type" />
+              <ModalButton
+                onPress={() => this._handleModalText("Minute")}
+                text="Minute"
+              />
+              <ModalButton
+                onPress={() => this._handleModalText("Hour")}
+                text="Hour"
+              />
+              <ModalButton
+                onPress={() => this._handleModalText("Day")}
+                text="Day"
+              />
+              <ModalButton
+                onPress={() => this._handleModalText("Week")}
+                text="Week"
+              />
+              <ModalButton
+                onPress={() => this._handleModalText("Month")}
+                text="Month"
+              />
             </View>
           </Modal>
+          
         </SafeAreaView>
       </TouchableWithoutFeedback>
     );
@@ -468,13 +438,6 @@ const styles = StyleSheet.create({
   repeatTypeSelect: {
     color: "white",
     fontSize: 20,
-    paddingHorizontal: 10,
-    padding: 10
-  },
-
-  repeatTypeInterval: {
-    color: "white",
-    fontSize: 15,
     paddingHorizontal: 10,
     padding: 10
   },

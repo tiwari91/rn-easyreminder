@@ -1,32 +1,35 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   FlatList,
   Text,
   TouchableOpacity,
-  TouchableHighlight
-} from "react-native";
-import { List, Avatar } from "react-native-elements";
+  TouchableHighlight,
+} from 'react-native';
+import { List, Avatar } from 'react-native-elements';
 
-import PropTypes from "prop-types";
-import NotifyIcon from "react-native-vector-icons/MaterialIcons";
-import styles from "./styles";
+import PropTypes from 'prop-types';
+import NotifyIcon from 'react-native-vector-icons/MaterialIcons';
+import styles from './styles';
 
-const ListItem = ({ renderData, navigation }) => {
-  console.log(navigation);
-
+const ListItem = ({ renderData, navigation, handleOnGetData }) => {
   renderSeparator = () => (
-    <View style={{ height: 0.5, backgroundColor: "#E5E5E5" }} />
+    <View style={{ height: 0.5, backgroundColor: '#E5E5E5' }} />
   );
 
-  goToNextScreen = () => navigation.navigate("AddReminder");
+  goToNextScreen = (item) => {
+    navigation.navigate('AddReminder', {
+      data: renderData,
+      handleOnGetData,
+    });
+  };
 
   return (
     <List containerStyle={{ borderTopWidth: 1, marginTop: 0 }}>
       <FlatList
         data={renderData}
         renderItem={({ item }) => (
-          <TouchableHighlight onPress={() => this.goToNextScreen()}>
+          <TouchableHighlight onPress={() => this.goToNextScreen(item)}>
             <View style={styles.listContainer}>
               <View style={styles.listLeft}>
                 <Avatar medium rounded title={item.title.charAt(0)} />
@@ -63,7 +66,7 @@ const ListItem = ({ renderData, navigation }) => {
 };
 
 ListItem.propTypes = {
-  renderData: PropTypes.array.isRequired
+  renderData: PropTypes.array.isRequired,
 };
 
 export default ListItem;

@@ -31,22 +31,25 @@ import MomentTZ from "moment-timezone";
 
 import { AsyncStorage } from "react-native";
 import { InputWithButton } from "../components/TextInput";
+
 import DatePicker from "../components/DateTimePicker/index";
 import DateTimeView from "../components/DateTimeView/index";
 
-const REMINDER_KEY = "reminderKey";
-const REMINDER_KEY_OBJ = "reminderKeyObj";
-
 class AddReminder extends Component {
-  
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
+    const headerTitle =
+      params.data !== undefined ? "Edit reminder" : "Create a reminder";
+
     return {
       headerRight: (
         <View style={{ flexDirection: "row" }}>
-          <TouchableOpacity onPress={() => params.handleRemove()}>
-            <NavIcon color="white" size={26} name="delete" />
-          </TouchableOpacity>
+          {params.data !== undefined ? (
+            <TouchableOpacity onPress={() => params.handleRemove()}>
+              <NavIcon color="white" size={26} name="delete" />
+            </TouchableOpacity>
+          ) : null}
+
           <TouchableOpacity
             style={{ marginLeft: 20, right: 10 }}
             onPress={() => params.handleSave()}
@@ -59,7 +62,7 @@ class AddReminder extends Component {
       headerStyle: {
         backgroundColor: "#374046"
       },
-      headerTitle: params.title,
+      headerTitle: headerTitle,
       headerTitleStyle: {
         right: 100,
         alignSelf: "flex-end"
@@ -69,16 +72,12 @@ class AddReminder extends Component {
 
   constructor(props) {
     super(props);
-    
-    this.state = {
-      text: " ",
-      dateText: MomentTZ()
-        .tz("America/Los_Angeles")
-        .format("LL"),
-      timeText: MomentTZ()
-        .tz("America/Los_Angeles")
-        .format("hh:mm A"),
 
+    this.state = {
+      reminderKey: "",
+      text: " ",
+      dateText: "",
+      timeText: "",
       todayDate: MomentTZ()
         .tz("America/Los_Angeles")
         .format("LL"),
@@ -97,6 +96,34 @@ class AddReminder extends Component {
   }
 
   componentDidMount() {
+    var data = this.props.navigation.state.params.data;
+
+    if (data !== undefined) {
+      data.map(x => {
+        let timeTxt = x.date.split(" ");
+        this.setState({
+          reminderKey: x.key,
+          text: x.title,
+          dateText: timeTxt.slice(0, -2).join(" "),
+          timeText:
+            timeTxt[timeTxt.length - 2] + " " + timeTxt[timeTxt.length - 1],
+          notify: x.notify,
+          repeatInterval: x.duration.match(/\d/g).join(""),
+          selectRepeatType: x.duration.split(" ")[2]
+        });
+      });
+    } else {
+      this.setState({
+        timeText: MomentTZ()
+          .tz("America/Los_Angeles")
+          .format("hh:mm A"),
+        dateText: MomentTZ()
+          .tz("America/Los_Angeles")
+          .format("LL"),
+        text: "Please enter your text"
+      });
+    }
+
     this.props.navigation.setParams({
       handleRemove: this.deleteReminder,
       handleSave: this.saveReminder
@@ -129,61 +156,6 @@ class AddReminder extends Component {
     this.setState({ switchValue: !this.state.switchValue });
   };
 
-  deleteReminder = () => {
-    console.log("delete reminder");
-  };
-
-  saveReminder = () => {
-    let reminderObject = {
-      inputText: this.state.text,
-      notify: this.state.notify,
-      date: this.state.dateText,
-      time: this.state.timeText,
-      repeatInterval: this.state.repeatInterval,
-      selectRepeatType: this.state.selectRepeatType
-    };
-
-    const CURRENT_KEY =
-      REMINDER_KEY + "_" + Math.floor(Math.random() * 1000000) + 1;
-
-    AsyncStorage.getItem(REMINDER_KEY_OBJ, (err, result) => {
-      const restoredArray = JSON.parse(result);
-      if (restoredArray !== null) {
-        if (restoredArray.indexOf(CURRENT_KEY) === -1) {
-          restoredArray.push(CURRENT_KEY);
-          AsyncStorage.setItem(REMINDER_KEY_OBJ, JSON.stringify(restoredArray));
-          AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject));
-        }
-      } else {
-        AsyncStorage.setItem(
-          REMINDER_KEY_OBJ,
-          JSON.stringify(new Array(CURRENT_KEY))
-        );
-        AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject));
-      }
-    }).done(() => {
-      Alert.alert(
-        "Saved",
-        "Reminder added successfully",
-        [
-          {
-            text: "Cancel",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel"
-          },
-          {
-            text: "OK",
-            onPress: () => {
-              this.props.navigation.state.params.handleOnNavigateBack();
-              this.props.navigation.goBack();
-            }
-          }
-        ],
-        { cancelable: false }
-      );
-    });
-  };
-
   _handleNotification = () => {
     this.setState({
       notify: !this.state.notify
@@ -203,6 +175,55 @@ class AddReminder extends Component {
     });
   };
 
+  saveReminder = () => {
+    let reminderObject = {
+      inputText: this.state.text,
+      notify: this.state.notify,
+      date: this.state.dateText,
+      time: this.state.timeText,
+      repeatInterval: this.state.repeatInterval,
+      selectRepeatType: this.state.selectRepeatType
+    };
+
+    const CURRENT_KEY = Math.round(new Date().getTime() / 1000).toString();
+
+    AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject)).done(
+      () => {
+        Alert.alert(
+          "Saved",
+          "Reminder added successfully",
+          [{
+              text: "OK",
+              onPress: () => {
+                this.props.navigation.state.params.handleOnNavigateBack();
+                this.props.navigation.goBack();
+              }
+            }
+          ],
+          { cancelable: false }
+        );
+      }
+    );
+  };
+
+  deleteReminder = () => {
+    AsyncStorage.removeItem(this.state.reminderKey).done(() => {
+      Alert.alert(
+        "Delete",
+        "Reminder delete successfully",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              this.props.navigation.state.params.handleOnGetData();
+              this.props.navigation.goBack();
+            }
+          }
+        ],
+        { cancelable: false }
+      );
+    });
+  };
 
   render() {
     return (
@@ -216,6 +237,7 @@ class AddReminder extends Component {
             <InputWithButton
               maxLength={40}
               onChangeText={this._handleInputText}
+              text={this.state.text}
             />
             <ActionButton
               buttonColor="#65799b"
@@ -237,7 +259,6 @@ class AddReminder extends Component {
 
           <View style={styles.bottomView}>
             <DateTimeView
-              dateTimeCheck={true}
               onPress={this._showDatePicker}
               IconName="ios-calendar-outline"
               dateText={this.state.dateText}
@@ -245,7 +266,6 @@ class AddReminder extends Component {
             />
 
             <DateTimeView
-              dateTimeCheck={false}
               onPress={this._showTimePicker}
               IconName="ios-time-outline"
               dateText={this.state.timeText}
@@ -277,7 +297,8 @@ class AddReminder extends Component {
 
             <View
               pointerEvents={this.state.switchValue === true ? null : "none"}
-              style={styles.dateTimePickerRow}>
+              style={styles.dateTimePickerRow}
+            >
               <TouchableOpacity onPress={() => this.setState({ open: true })}>
                 <ChevronIcon color="white" size={20} name="chevron-up" />
                 <ChevronIcon color="white" size={20} name="chevron-down" />
@@ -297,9 +318,11 @@ class AddReminder extends Component {
 
             <View
               pointerEvents={this.state.switchValue === true ? null : "none"}
-              style={styles.dateTimePickerRow}>
+              style={styles.dateTimePickerRow}
+            >
               <TouchableOpacity
-                onPress={() => this.setState({ repeatType: true })}>
+                onPress={() => this.setState({ repeatType: true })}
+              >
                 <NavIcon
                   color="white"
                   size={20}
@@ -308,7 +331,8 @@ class AddReminder extends Component {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() => this.setState({ repeatType: true })}>
+                onPress={() => this.setState({ repeatType: true })}
+              >
                 <View style={styles.dateContent}>
                   <Text style={{ fontSize: 15, color: "white" }}>
                     Types of Repeats
@@ -341,7 +365,9 @@ class AddReminder extends Component {
           <Modal
             open={this.state.open}
             modalDidClose={() => this.setState({ open: false })}
-            modalStyle={{ backgroundColor: "#374046" }}>
+            overlayBackground={"rgba(0, 0, 0, 0.50)"}
+            modalStyle={{ backgroundColor: "#374046" }}
+          >
             <View>
               <InputWithButton
                 maxLength={10}
@@ -353,9 +379,11 @@ class AddReminder extends Component {
           <Modal
             open={this.state.repeatType}
             modalDidClose={() => this.setState({ repeatType: false })}
+            overlayBackground={"rgba(0, 0, 0, 0.50)"}
             modalStyle={{
               backgroundColor: "#374046"
-            }}>
+            }}
+          >
             <View>
               <TouchableOpacity onPress={() => null}>
                 <Text style={styles.repeatTypeSelect}>
@@ -419,7 +447,6 @@ class AddReminder extends Component {
               </TouchableOpacity>
             </View>
           </Modal>
-
         </SafeAreaView>
       </TouchableWithoutFeedback>
     );

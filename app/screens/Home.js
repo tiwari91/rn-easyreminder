@@ -11,8 +11,6 @@ import { Header } from "../components/Header";
 import { Info } from "../components/Info";
 import { ListItem } from "../components/List";
 
-const REMINDER_KEY_OBJ = "reminderKeyObj";
-
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -28,31 +26,40 @@ class Home extends Component {
 
   _fetchData = () => {
     AsyncStorage.getAllKeys().then(keys => {
+      //console.log(keys);
       keys.forEach(element => {
-        // console.log(element);
-        if (element !== REMINDER_KEY_OBJ) {
-          AsyncStorage.getItem(element)
-            .then(JSON.parse)
-            .then(response => {
-              //console.log(response);
-              this.setState({
-                data: this.state.data.filter(b => b.key !== element).concat({
-                  key: element,
-                  title: response.inputText,
-                  date: `${response.date} ${response.time}`,
-                  duration: `Every ${response.repeatInterval} days`,
-                  notify: response.notify,
-                  avatar: "avatar"
-                })
-              });
+        AsyncStorage.getItem(element)
+          .then(JSON.parse)
+          .then(response => {
+            //console.log(response);
+            this.setState({
+              data: this.state.data.filter(b => b.key !== element).concat({
+                key: element,
+                title: response.inputText,
+                date: `${response.date} ${response.time}`,
+                duration: `Every ${response.repeatInterval} days`,
+                notify: response.notify,
+                avatar: "avatar"
+              })
             });
-        }
+          });
       });
     });
   };
 
   handleOnNavigateBack = () => {
     this._fetchData();
+  };
+
+  handleOnGetData = () => {
+    AsyncStorage.getAllKeys().then(keys => {
+      keys.forEach(element => {
+        this.setState(state => {
+          console.log(state.data);
+          //state: state.date.filter(b => b.key !== element);
+        });
+      });
+    });
   };
 
   render() {
@@ -64,6 +71,7 @@ class Home extends Component {
           <ListItem
             renderData={this.state.data}
             navigation={this.props.navigation}
+            handleOnGetData={this.handleOnGetData}
           />
         ) : (
           <Info InfoText="Press on plus button to create reminders" />
@@ -72,7 +80,6 @@ class Home extends Component {
           buttonColor="rgba(231,76,60,1)"
           onPress={() =>
             this.props.navigation.navigate("AddReminder", {
-              title: "Create a Reminder",
               handleOnNavigateBack: this.handleOnNavigateBack
             })
           }

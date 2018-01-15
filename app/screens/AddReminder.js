@@ -20,7 +20,6 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 
 import Modal from "react-native-simple-modal";
 import Icon from "react-native-vector-icons/Ionicons";
-import ChevronIcon from "react-native-vector-icons/EvilIcons";
 import NavIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import NotifyIcon from "react-native-vector-icons/MaterialIcons";
 import ActionButton from "react-native-action-button";
@@ -33,7 +32,8 @@ import { InputWithButton } from "../components/TextInput";
 
 import DatePicker from "../components/DateTimePicker/index";
 import DateTimeView from "../components/DateTimeView/index";
-
+import RepeatSwitchView from "../components/RepeatSwitchView/";
+import RepeatInterval from "../components/RepeatInterval";
 import ModalButton from "../components/Modal/ModalButton";
 
 class AddReminder extends Component {
@@ -79,9 +79,7 @@ class AddReminder extends Component {
       text: " ",
       dateText: "",
       timeText: "",
-      todayDate: MomentTZ()
-        .tz("America/Los_Angeles")
-        .format("LL"),
+      todayDate: this.dateInit(),
       isDatePickerVisible: false,
       isTimePickerVisible: false,
 
@@ -97,7 +95,7 @@ class AddReminder extends Component {
   }
 
   componentDidMount() {
-    var data = this.props.navigation.state.params.item;
+    let data = this.props.navigation.state.params.item;
     if (data !== undefined) {
       let timeTxt = data.date.split(" ");
       this.setState({
@@ -112,12 +110,8 @@ class AddReminder extends Component {
       });
     } else {
       this.setState({
-        timeText: MomentTZ()
-          .tz("America/Los_Angeles")
-          .format("hh:mm A"),
-        dateText: MomentTZ()
-          .tz("America/Los_Angeles")
-          .format("LL"),
+        timeText: this.timeInit(),
+        dateText: this.dateInit(),
         text: ""
       });
     }
@@ -128,13 +122,23 @@ class AddReminder extends Component {
     });
   }
 
+  dateInit = date => {
+    return MomentTZ(date)
+      .tz("America/Los_Angeles")
+      .format("LL");
+  };
+
+  timeInit = time => {
+    return MomentTZ(time)
+      .tz("America/Los_Angeles")
+      .format("hh:mm A");
+  };
+
   _showDatePicker = () => this.setState({ isDatePickerVisible: true });
   _hideDatePicker = () => this.setState({ isDatePickerVisible: false });
   _handleDatePicked = date => {
     this.setState({
-      dateText: MomentTZ(date)
-        .tz("America/Los_Angeles")
-        .format("LL")
+      dateText: this.dateInit(date)
     });
     this._hideDatePicker();
   };
@@ -143,9 +147,7 @@ class AddReminder extends Component {
   _hideTimePicker = () => this.setState({ isTimePickerVisible: false });
   _handleTimePicked = time => {
     this.setState({
-      timeText: MomentTZ(time)
-        .tz("America/Los_Angeles")
-        .format("hh:mm A")
+      timeText: this.timeInit(time)
     });
     this._hideTimePicker();
   };
@@ -230,7 +232,6 @@ class AddReminder extends Component {
   };
 
   _handleModalText = text => {
-    console.log("_handleModalText");
     this.setState({
       selectRepeatType: text,
       repeatType: false
@@ -285,77 +286,27 @@ class AddReminder extends Component {
               name="Time"
             />
 
-            <View style={styles.repeatRow}>
-              <View style={{ flexDirection: "row" }}>
-                <Icon color="white" size={26} name="ios-repeat" />
-                <View style={{ marginLeft: 45 }}>
-                  <Text style={{ fontSize: 15, color: "white" }}>Repeat</Text>
-                  <Text style={{ fontSize: 15, color: "white" }}>
-                    {this.state.switchValue === true
-                      ? `Every ${this.state.repeatInterval} ${
-                          this.state.selectRepeatType
-                        }(s)`
-                      : "No Repeat"}
-                  </Text>
-                </View>
-              </View>
+            <RepeatSwitchView
+              value={this.state.switchValue}
+              onValueChange={this._handleToggleSwitch}
+              repeatInterval={this.state.repeatInterval}
+              selectRepeatType={this.state.selectRepeatType}
+            />
 
-              <Switch
-                value={this.state.switchValue}
-                disabled={false}
-                onValueChange={this._handleToggleSwitch}
-                tintColor="#ff0000"
-              />
-            </View>
+            <RepeatInterval
+              switchValue={this.state.switchValue}
+              repeatInterval={this.state.repeatInterval}
+              onPress={() => this.setState({ open: true })}
+              text="Repetition Interval"
+            />
 
-            <View
-              pointerEvents={this.state.switchValue === true ? null : "none"}
-              style={styles.dateTimePickerRow}
-            >
-              <TouchableOpacity onPress={() => this.setState({ open: true })}>
-                <ChevronIcon color="white" size={20} name="chevron-up" />
-                <ChevronIcon color="white" size={20} name="chevron-down" />
-              </TouchableOpacity>
-
-              <TouchableOpacity onPress={() => this.setState({ open: true })}>
-                <View style={styles.dateContent}>
-                  <Text style={{ fontSize: 15, color: "white" }}>
-                    Repetition Interval
-                  </Text>
-                  <Text style={{ fontSize: 15, color: "white" }}>
-                    {this.state.repeatInterval}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            <View
-              pointerEvents={this.state.switchValue === true ? null : "none"}
-              style={styles.dateTimePickerRow}
-            >
-              <TouchableOpacity
-                onPress={() => this.setState({ repeatType: true })}
-              >
-                <NavIcon
-                  color="white"
-                  size={20}
-                  name="format-list-bulleted-type"
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => this.setState({ repeatType: true })}
-              >
-                <View style={styles.dateContent}>
-                  <Text style={{ fontSize: 15, color: "white" }}>
-                    Types of Repeats
-                  </Text>
-                  <Text style={{ fontSize: 15, color: "white" }}>
-                    {this.state.selectRepeatType}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            <RepeatInterval
+              switchValue={this.state.switchValue}
+              repeatInterval={this.state.repeatInterval}
+              selectRepeatType={this.state.selectRepeatType}
+              onPress={() => this.setState({ repeatType: true })}
+              text="Types of Repeats"
+            />
 
             <DatePicker
               isVisible={this.state.isDatePickerVisible}
@@ -385,6 +336,7 @@ class AddReminder extends Component {
               <InputWithButton
                 maxLength={10}
                 onChangeText={this._handleSetInterval}
+                keyboardType="numeric"
               />
             </View>
           </Modal>
@@ -421,7 +373,6 @@ class AddReminder extends Component {
               />
             </View>
           </Modal>
-          
         </SafeAreaView>
       </TouchableWithoutFeedback>
     );
@@ -435,13 +386,6 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
 
-  repeatTypeSelect: {
-    color: "white",
-    fontSize: 20,
-    paddingHorizontal: 10,
-    padding: 10
-  },
-
   topView: {
     backgroundColor: "#65799b",
     flex: 1,
@@ -451,33 +395,6 @@ const styles = StyleSheet.create({
   bottomView: {
     flex: 2,
     justifyContent: "space-around"
-    //marginTop: 50
-  },
-
-  dateTimePickerRow: {
-    flexDirection: "row",
-    padding: 10,
-    marginHorizontal: 20,
-    marginTop: 20
-    //backgroundColor: "red"
-    // height: 100,
-    // alignItems: "center"
-  },
-
-  dateContent: {
-    marginLeft: 20,
-    paddingHorizontal: 22
-  },
-
-  repeatRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 10,
-    marginHorizontal: 20,
-    marginTop: 20
-    //backgroundColor: "red"
-    //height: 100,
-    //alignItems: "center"
   }
 });
 

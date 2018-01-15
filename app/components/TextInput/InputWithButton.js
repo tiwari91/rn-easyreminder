@@ -30,6 +30,7 @@ const InputWithButton = (props) => {
       onSubmitEditing={Keyboard.dismiss}
       value={props.text}
       keyboardAppearance="dark"
+      keyboardType={props.keyboardType}
     />
   );
 };

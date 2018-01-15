@@ -19,6 +19,7 @@ const InputWithButton = (props) => {
   return (
     <TextInput
       style={baseStyle}
+      placeholder={props.placeholderText}
       onChangeText={props.onChangeText}
       multiline
       maxLength={props.maxLength}
@@ -28,6 +29,7 @@ const InputWithButton = (props) => {
       underlineColorAndroid="transparent"
       onSubmitEditing={Keyboard.dismiss}
       value={props.text}
+      keyboardAppearance="dark"
     />
   );
 };
@@ -35,6 +37,8 @@ const InputWithButton = (props) => {
 InputWithButton.propTypes = {
   onChangeText: PropTypes.func,
   maxLength: PropTypes.number,
+  text: PropTypes.string,
+  placeholderText: PropTypes.string,
 };
 
 export default InputWithButton;

@@ -117,7 +117,7 @@ class AddReminder extends Component {
         dateText: MomentTZ()
           .tz("America/Los_Angeles")
           .format("LL"),
-        text: "Please enter your text"
+        text: ""
       });
     }
 
@@ -236,6 +236,7 @@ class AddReminder extends Component {
               maxLength={40}
               onChangeText={this._handleInputText}
               text={this.state.text}
+              placeholderText="Enter your text"
             />
             <ActionButton
               buttonColor="#65799b"

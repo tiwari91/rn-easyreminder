@@ -26,23 +26,26 @@ class Home extends Component {
 
   _fetchData = () => {
     AsyncStorage.getAllKeys().then(keys => {
-      //console.log(keys);
+      console.log(keys);
       keys.forEach(element => {
-        AsyncStorage.getItem(element)
-          .then(JSON.parse)
-          .then(response => {
-            //console.log(response);
-            this.setState({
-              data: this.state.data.filter(b => b.key !== element).concat({
-                key: element,
-                title: response.inputText,
-                date: `${response.date} ${response.time}`,
-                duration: `Every ${response.repeatInterval} days`,
-                notify: response.notify,
-                avatar: "avatar"
-              })
+        if (element.includes("^notifications")) {
+        } else {
+          AsyncStorage.getItem(element)
+            .then(JSON.parse)
+            .then(response => {
+              console.log(response);
+              this.setState({
+                data: this.state.data.filter(b => b.key !== element).concat({
+                  key: element,
+                  title: response.inputText,
+                  date: `${response.date} ${response.time}`,
+                  duration: `Every ${response.repeatInterval} ${response.selectRepeatType}`,
+                  notify: response.notify,
+                  avatar: "avatar"
+                })
+              });
             });
-          });
+        }
       });
     });
   };
@@ -62,6 +65,7 @@ class Home extends Component {
   };
 
   render() {
+    //darkcyan
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "#374046" }}>
         <StatusBar barStyle="light-content" />
@@ -71,7 +75,7 @@ class Home extends Component {
             renderData={this.state.data}
             navigation={this.props.navigation}
             handleOnGetData={this.handleOnGetData}
-            handleOnNavigateBack={this.handleOnNavigateBack }
+            handleOnNavigateBack={this.handleOnNavigateBack}
           />
         ) : (
           <Info InfoText="Press on plus button to create reminders" />

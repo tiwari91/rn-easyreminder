@@ -29,7 +29,6 @@ const ListItem = ({
       handleOnNavigateBack,
     });
   };
-
   return (
     <List containerStyle={{ borderTopWidth: 1, marginTop: 0 }}>
       <FlatList

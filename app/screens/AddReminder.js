@@ -36,6 +36,23 @@ import RepeatSwitchView from "../components/RepeatSwitchView/";
 import RepeatInterval from "../components/RepeatInterval";
 import ModalButton from "../components/Modal/ModalButton";
 
+import { Permissions, Notifications } from "expo";
+const NOTIFICATION_KEY = "^notifications$";
+
+const newNotification = {
+  title: "Reminder from easy reminder!",
+  body: "",
+  ios: {
+    sound: true
+  },
+  android: {
+    sound: true,
+    priority: "high",
+    sticky: false,
+    vibrate: true
+  }
+};
+
 class AddReminder extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
@@ -86,11 +103,11 @@ class AddReminder extends Component {
       switchValue: true,
       notify: false,
 
-      repeatInterval: '0',
+      repeatInterval: "0",
       open: false,
       repeatType: false,
 
-      selectRepeatType: "Minute"
+      selectRepeatType: "minute"
     };
   }
 
@@ -125,13 +142,13 @@ class AddReminder extends Component {
   dateInit = date => {
     return MomentTZ(date)
       .tz("America/Los_Angeles")
-      .format("LL");
+      .format("YYYY-MM-DD");
   };
 
   timeInit = time => {
     return MomentTZ(time)
       .tz("America/Los_Angeles")
-      .format("hh:mm A");
+      .format("HH:mm A");
   };
 
   _showDatePicker = () => this.setState({ isDatePickerVisible: true });
@@ -156,12 +173,6 @@ class AddReminder extends Component {
     this.setState({ switchValue: !this.state.switchValue });
   };
 
-  _handleNotification = () => {
-    this.setState({
-      notify: !this.state.notify
-    });
-  };
-
   _handleSetInterval = text => {
     this.setState({
       repeatInterval: text
@@ -174,7 +185,16 @@ class AddReminder extends Component {
     });
   };
 
+  _handleNotification = () => {
+    this.setState(
+      {
+        notify: !this.state.notify
+      });
+  };
+
   saveReminder = () => {
+    //console.log(this.state.notify);
+
     let reminderObject = {
       inputText: this.state.text,
       notify: this.state.notify,
@@ -194,6 +214,30 @@ class AddReminder extends Component {
 
     AsyncStorage.setItem(CURRENT_KEY, JSON.stringify(reminderObject)).done(
       () => {
+        if (this.state.notify === true) {
+          Permissions.askAsync(Permissions.NOTIFICATIONS).then(({ status }) => {
+            if (status === "granted") {
+              let dateNotify = MomentTZ(
+                this.state.dateText +
+                  " " +
+                  this.state.timeText.split(":")[0] +
+                  ":" +
+                  this.state.timeText.split(":")[1].split(" ")[0]
+              )
+                .tz("America/Los_Angeles")
+                .format("YYYY-MM-DD HH:mm");
+              newNotification.body = this.state.text;
+              Notifications.scheduleLocalNotificationAsync(newNotification, {
+                time: Moment(dateNotify, "YYYY-MM-DD HH:mm").valueOf(),
+                repeat: this.state.selectRepeatType.toLocaleLowerCase()
+              });
+              NOTIFICATION_KEY += Math.round(
+                new Date().getTime() / 1000
+              ).toString();
+              AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true));
+            }
+          });
+        }
         Alert.alert(
           "Saved",
           "Reminder added successfully",
@@ -354,24 +398,24 @@ class AddReminder extends Component {
             <View>
               <ModalButton onPress={() => null} text="Select Repetition Type" />
               <ModalButton
-                onPress={() => this._handleModalText("Minute")}
-                text="Minute"
+                onPress={() => this._handleModalText("minute")}
+                text="minute"
               />
               <ModalButton
-                onPress={() => this._handleModalText("Hour")}
-                text="Hour"
+                onPress={() => this._handleModalText("hour")}
+                text="hour"
               />
               <ModalButton
-                onPress={() => this._handleModalText("Day")}
-                text="Day"
+                onPress={() => this._handleModalText("day")}
+                text="day"
               />
               <ModalButton
-                onPress={() => this._handleModalText("Week")}
-                text="Week"
+                onPress={() => this._handleModalText("week")}
+                text="week"
               />
               <ModalButton
-                onPress={() => this._handleModalText("Month")}
-                text="Month"
+                onPress={() => this._handleModalText("month")}
+                text="month"
               />
             </View>
           </Modal>
